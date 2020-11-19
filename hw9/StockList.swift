@@ -26,10 +26,10 @@ struct StockList: View {
     
     var body: some View {
         NavigationView {
-            VStack() {
-                SearchBar(text: $searchText, placeholder: "Search cars")
+                
                 List {
-//                    let stockString = userData.stocks.map { $0.ticker }
+                    SearchBar(text: $searchText, placeholder: "Search cars")
+                    
                     ForEach(
                         userData.stocks
                             .filter
@@ -43,16 +43,47 @@ struct StockList: View {
                             StockRow(stock: stock)
                         }
                     }
+                    .onMove(perform:moveStocks)
+                    .onDelete(perform:deleteStocks)
                 }
-                .padding(0.0)
                 .navigationBarTitle(Text("Stocks"))
-            }
+                .toolbar {
+                    EditButton()
+                }
+            
             
         }
-//        Text(userData.stocks[1].ticker)
-//            .padding()
+        
+        
     }
+    
+    func addStock() {
+        withAnimation {
+            userData.stocks.append(Stock(id: 11,
+                                         shares: 10,
+                                   ticker: "fuck!",
+            name: "fuck!!",
+            price: 10,
+            change: 78))
+        }
+    }
+    
+    func moveStocks(from: IndexSet, to: Int) {
+        withAnimation {
+            userData.stocks.move(fromOffsets: from, toOffset: to)
+        }
+    }
+    
+    func deleteStocks(offsets: IndexSet) {
+        withAnimation {
+            userData.stocks.remove(atOffsets: offsets)
+        }
+    }
+    
+    
 }
+
+
 
 struct StockList_Previews: PreviewProvider {
     static var previews: some View {

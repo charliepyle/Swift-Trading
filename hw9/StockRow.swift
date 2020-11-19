@@ -39,6 +39,15 @@ struct StockRow: View {
 //                    UIImageView(UIImage(named:"diagonal"))
 //                    image
 //                    Image(systemName: ')
+                    if (stock.change < 0) {
+                        Image(systemName: "arrow.down.right")
+                        .foregroundColor(Color.red)
+                    }
+                    if (stock.change > 0) {
+                        Image(systemName: "arrow.up.right")
+                        .foregroundColor(Color.green)
+                    }
+                    
                     Text(String(describing: stock.change))
                         .if(stock.change < 0) {
                             $0.foregroundColor(Color.red)
