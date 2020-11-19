@@ -8,13 +8,79 @@
 import SwiftUI
 
 struct StockRow: View {
+    var stock: Stock
+    
+//    @State var negative:Bool = self.stock.change < 0
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            
+            VStack {
+                Text(stock.ticker)
+                if (stock.shares.isZero) {
+                    Text(stock.name)
+                        .multilineTextAlignment(.leading)
+                }
+                else {
+                    Text(String(describing: stock.shares))
+                        .multilineTextAlignment(.leading)
+                }
+            }
+            .padding()
+            
+            Spacer()
+            
+            VStack {
+                Text(String(describing: stock.price))
+                    .multilineTextAlignment(.trailing)
+                    
+                HStack {
+//                    let image: UIImage? = UIImage(named: "diagonal")
+//                    UIImageView(UIImage(named:"diagonal"))
+//                    image
+//                    Image(systemName: ')
+                    Text(String(describing: stock.change))
+                        .if(stock.change < 0) {
+                            $0.foregroundColor(Color.red)
+                        }
+                        .if(stock.change == 0) {
+                            $0.foregroundColor(Color.black)
+                        }
+                        .if(stock.change > 0) {
+                            $0.foregroundColor(Color.green)
+                        }
+                }
+                
+//                    .multilineTextAlignment(.trailing)
+                    
+            }
+            .padding()
+            
+        }
+//        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
+}
+
+extension View {
+  @ViewBuilder
+  func `if`<Transform: View>(
+    _ condition: Bool,
+    transform: (Self) -> Transform
+  ) -> some View {
+    if condition {
+      transform(self)
+    } else {
+      self
+    }
+  }
 }
 
 struct StockRow_Previews: PreviewProvider {
     static var previews: some View {
-        StockRow()
+        Group {
+            StockRow(stock: stockData[0])
+        }
+        .previewLayout(.fixed(width: 300, height: 70))
     }
+    
 }

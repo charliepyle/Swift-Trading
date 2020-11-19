@@ -8,11 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		460BDCF525649BCB00A39ACD /* hw9App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDCF425649BCB00A39ACD /* hw9App.swift */; };
-		460BDCF725649BCB00A39ACD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDCF625649BCB00A39ACD /* ContentView.swift */; };
-		460BDCF925649BCE00A39ACD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 460BDCF825649BCE00A39ACD /* Assets.xcassets */; };
+		460BDCF725649BCB00A39ACD /* StockList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDCF625649BCB00A39ACD /* StockList.swift */; };
 		460BDCFC25649BCE00A39ACD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 460BDCFB25649BCE00A39ACD /* Preview Assets.xcassets */; };
 		460BDD0725649BCE00A39ACD /* hw9Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD0625649BCE00A39ACD /* hw9Tests.swift */; };
 		460BDD1225649BCE00A39ACD /* hw9UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD1125649BCE00A39ACD /* hw9UITests.swift */; };
+		460BDD262564DBB400A39ACD /* Stock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD252564DBB400A39ACD /* Stock.swift */; };
+		460BDD372564DF2E00A39ACD /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD362564DF2E00A39ACD /* UserData.swift */; };
+		460BDD3F2564E56C00A39ACD /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD3E2564E56C00A39ACD /* Data.swift */; };
+		460BDD442564EA6F00A39ACD /* StockRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD432564EA6F00A39ACD /* StockRow.swift */; };
+		460BDD492564ECED00A39ACD /* StockDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD482564ECED00A39ACD /* StockDetail.swift */; };
+		460BDD512564F11B00A39ACD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 460BDD502564F11B00A39ACD /* Assets.xcassets */; };
+		460BDD5A2564FD2500A39ACD /* stocks.json in Resources */ = {isa = PBXBuildFile; fileRef = 460BDD592564FD2500A39ACD /* stocks.json */; };
+		460BDD62256502CA00A39ACD /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD61256502CA00A39ACD /* SearchBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,8 +42,7 @@
 /* Begin PBXFileReference section */
 		460BDCF125649BCB00A39ACD /* hw9.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hw9.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		460BDCF425649BCB00A39ACD /* hw9App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hw9App.swift; sourceTree = "<group>"; };
-		460BDCF625649BCB00A39ACD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		460BDCF825649BCE00A39ACD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		460BDCF625649BCB00A39ACD /* StockList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockList.swift; sourceTree = "<group>"; };
 		460BDCFB25649BCE00A39ACD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		460BDCFD25649BCE00A39ACD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		460BDD0225649BCE00A39ACD /* hw9Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hw9Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +51,15 @@
 		460BDD0D25649BCE00A39ACD /* hw9UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hw9UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		460BDD1125649BCE00A39ACD /* hw9UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hw9UITests.swift; sourceTree = "<group>"; };
 		460BDD1325649BCE00A39ACD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		460BDD252564DBB400A39ACD /* Stock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stock.swift; sourceTree = "<group>"; };
+		460BDD362564DF2E00A39ACD /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		460BDD3E2564E56C00A39ACD /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		460BDD432564EA6F00A39ACD /* StockRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockRow.swift; sourceTree = "<group>"; };
+		460BDD482564ECED00A39ACD /* StockDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetail.swift; sourceTree = "<group>"; };
+		460BDD502564F11B00A39ACD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../../Downloads/Assets.xcassets; sourceTree = "<group>"; };
+		460BDD552564F12700A39ACD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../Downloads/Assets.xcassets; sourceTree = "<group>"; };
+		460BDD592564FD2500A39ACD /* stocks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stocks.json; path = ../../../../../../../.Trash/stocks.json; sourceTree = "<group>"; };
+		460BDD61256502CA00A39ACD /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,9 +110,14 @@
 		460BDCF325649BCB00A39ACD /* hw9 */ = {
 			isa = PBXGroup;
 			children = (
+				460BDD242564DBA300A39ACD /* Models */,
 				460BDCF425649BCB00A39ACD /* hw9App.swift */,
-				460BDCF625649BCB00A39ACD /* ContentView.swift */,
-				460BDCF825649BCE00A39ACD /* Assets.xcassets */,
+				460BDCF625649BCB00A39ACD /* StockList.swift */,
+				460BDD61256502CA00A39ACD /* SearchBar.swift */,
+				460BDD432564EA6F00A39ACD /* StockRow.swift */,
+				460BDD482564ECED00A39ACD /* StockDetail.swift */,
+				460BDD2D2564DDA100A39ACD /* Resources */,
+				460BDD552564F12700A39ACD /* Assets.xcassets */,
 				460BDCFD25649BCE00A39ACD /* Info.plist */,
 				460BDCFA25649BCE00A39ACD /* Preview Content */,
 			);
@@ -128,6 +148,25 @@
 				460BDD1325649BCE00A39ACD /* Info.plist */,
 			);
 			path = hw9UITests;
+			sourceTree = "<group>";
+		};
+		460BDD242564DBA300A39ACD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				460BDD252564DBB400A39ACD /* Stock.swift */,
+				460BDD362564DF2E00A39ACD /* UserData.swift */,
+				460BDD3E2564E56C00A39ACD /* Data.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		460BDD2D2564DDA100A39ACD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				460BDD592564FD2500A39ACD /* stocks.json */,
+				460BDD502564F11B00A39ACD /* Assets.xcassets */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -234,7 +273,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				460BDCFC25649BCE00A39ACD /* Preview Assets.xcassets in Resources */,
-				460BDCF925649BCE00A39ACD /* Assets.xcassets in Resources */,
+				460BDD5A2564FD2500A39ACD /* stocks.json in Resources */,
+				460BDD512564F11B00A39ACD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,8 +299,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				460BDCF725649BCB00A39ACD /* ContentView.swift in Sources */,
+				460BDCF725649BCB00A39ACD /* StockList.swift in Sources */,
+				460BDD3F2564E56C00A39ACD /* Data.swift in Sources */,
+				460BDD492564ECED00A39ACD /* StockDetail.swift in Sources */,
 				460BDCF525649BCB00A39ACD /* hw9App.swift in Sources */,
+				460BDD442564EA6F00A39ACD /* StockRow.swift in Sources */,
+				460BDD372564DF2E00A39ACD /* UserData.swift in Sources */,
+				460BDD262564DBB400A39ACD /* Stock.swift in Sources */,
+				460BDD62256502CA00A39ACD /* SearchBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 final class UserData: ObservableObject {
-    @Published var nnetWorth = 1000
-    @Published var stockData = stocks
+    @Published var netWorth = 1000
+    @Published var stocks = stockData
 }
 

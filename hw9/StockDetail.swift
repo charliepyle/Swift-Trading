@@ -7,14 +7,19 @@
 
 import SwiftUI
 
-struct StockView: View {
+struct StockDetail: View {
+    @EnvironmentObject var userData: UserData
+    var stock: Stock
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text(stock.ticker)
     }
 }
 
-struct StockView_Previews: PreviewProvider {
+struct StockDetail_Previews: PreviewProvider {
     static var previews: some View {
-        StockView()
+        let userData = UserData()
+        StockDetail(stock: userData.stocks[0])
+            .environmentObject(userData)
     }
 }

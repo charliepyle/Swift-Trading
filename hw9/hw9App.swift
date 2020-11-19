@@ -11,7 +11,7 @@ import SwiftUI
 struct hw9App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StockList()
         }
     }
 }
