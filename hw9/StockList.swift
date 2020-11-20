@@ -9,44 +9,49 @@ import SwiftUI
 
 struct StockList: View {
     @State var searchText: String = ""
-    @EnvironmentObject private var userData: UserData
+    @ObservedObject var userData: UserData = UserData()
+    @ObservedObject var searchBar: SearchBar = SearchBar()
 //    var stockString = userData.stocks.map { $0.ticker }
 //    @State var searchString: String
-    
-    
-    // Search action. Called when search key pressed on keyboard
-//        func search() {
-//            searchString = ""
-//        }
-//
-//        // Cancel action. Called when cancel button of search bar pressed
-//        func cancel() {
-//            searchString = ""
-//        }
     
     var body: some View {
         NavigationView {
                 
                 List {
-                    SearchBar(text: $searchText, placeholder: "Search cars")
+//                    SearchBar(text: $searchText)
+                    
+                    
+                    Text(getFormattedDate())
+                    
+                    
                     
                     ForEach(
                         userData.stocks
                             .filter
                         {stock in
-                            searchText.isEmpty ||
-                                stock.ticker.lowercased().contains(searchText.lowercased())
+                                searchBar.text.isEmpty ||
+                                    stock.ticker.lowercased().contains(searchBar.text.lowercased())
                         }
                     ) { stock in
                         NavigationLink(
-                            destination: StockDetail(stock: stock).environmentObject(self.userData)) {
+//                            destination: StockDetail(stock: stock).environmentObject(self.userData)) {
+                        destination: StockDetail(stock: stock)) {
                             StockRow(stock: stock)
                         }
                     }
                     .onMove(perform:moveStocks)
                     .onDelete(perform:deleteStocks)
+//                    .environmentObject(self.userData)
+                    
+                    Text("Favorites")
+                        .multilineTextAlignment(.leading)
+                        .padding([.top, .leading, .bottom], 10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(red: 0.8, green: 0.8, blue: 0.8, opacity: 1.0))
+                        .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0))
                 }
                 .navigationBarTitle(Text("Stocks"))
+                .add(self.searchBar)
                 .toolbar {
                     EditButton()
                 }
@@ -55,6 +60,15 @@ struct StockList: View {
         }
         
         
+    }
+    
+    func getFormattedDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        let date = Date()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        return dateFormatter.string(from: date)
     }
     
     func addStock() {
@@ -90,6 +104,6 @@ struct StockList_Previews: PreviewProvider {
         Group {
             StockList()
         }
-        .environmentObject(UserData())
+//        .environmentObject(UserData())
     }
 }

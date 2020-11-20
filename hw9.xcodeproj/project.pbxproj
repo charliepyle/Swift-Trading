@@ -20,6 +20,7 @@
 		460BDD512564F11B00A39ACD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 460BDD502564F11B00A39ACD /* Assets.xcassets */; };
 		460BDD5A2564FD2500A39ACD /* stocks.json in Resources */ = {isa = PBXBuildFile; fileRef = 460BDD592564FD2500A39ACD /* stocks.json */; };
 		460BDD62256502CA00A39ACD /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD61256502CA00A39ACD /* SearchBar.swift */; };
+		460BDD702567522B00A39ACD /* ViewControllerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		460BDD552564F12700A39ACD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../../../Downloads/Assets.xcassets; sourceTree = "<group>"; };
 		460BDD592564FD2500A39ACD /* stocks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stocks.json; path = ../../../../../../../.Trash/stocks.json; sourceTree = "<group>"; };
 		460BDD61256502CA00A39ACD /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerResolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				460BDCF425649BCB00A39ACD /* hw9App.swift */,
 				460BDCF625649BCB00A39ACD /* StockList.swift */,
 				460BDD61256502CA00A39ACD /* SearchBar.swift */,
+				460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */,
 				460BDD432564EA6F00A39ACD /* StockRow.swift */,
 				460BDD482564ECED00A39ACD /* StockDetail.swift */,
 				460BDD2D2564DDA100A39ACD /* Resources */,
@@ -303,6 +306,7 @@
 				460BDD3F2564E56C00A39ACD /* Data.swift in Sources */,
 				460BDD492564ECED00A39ACD /* StockDetail.swift in Sources */,
 				460BDCF525649BCB00A39ACD /* hw9App.swift in Sources */,
+				460BDD702567522B00A39ACD /* ViewControllerResolver.swift in Sources */,
 				460BDD442564EA6F00A39ACD /* StockRow.swift in Sources */,
 				460BDD372564DF2E00A39ACD /* UserData.swift in Sources */,
 				460BDD262564DBB400A39ACD /* Stock.swift in Sources */,
