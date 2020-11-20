@@ -10,45 +10,54 @@ import SwiftUI
 struct StockRow: View {
     var stock: Stock
     
-//    @State var negative:Bool = self.stock.change < 0
     
     var body: some View {
         HStack {
             
-            VStack {
+            VStack(spacing:0) {
                 Text(stock.ticker)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 if (stock.shares.isZero) {
                     Text(stock.name)
-                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                        .foregroundColor(Color.gray)
                 }
                 else {
-                    Text(String(describing: stock.shares))
-                        .multilineTextAlignment(.leading)
+                    Text("\(stock.shares, specifier: "%.2f") shares")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.subheadline)
+                        .foregroundColor(Color.gray)
                 }
             }
             .padding()
             
             Spacer()
             
-            VStack {
-                Text(String(describing: stock.price))
-                    .multilineTextAlignment(.trailing)
+            VStack(spacing:0) {
+                Text("\(stock.price, specifier: "%.2f")")
+                    .fontWeight(.bold)
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
                     
                 HStack {
-//                    let image: UIImage? = UIImage(named: "diagonal")
-//                    UIImageView(UIImage(named:"diagonal"))
-//                    image
-//                    Image(systemName: ')
                     if (stock.change < 0) {
                         Image(systemName: "arrow.down.right")
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                         .foregroundColor(Color.red)
                     }
                     if (stock.change > 0) {
                         Image(systemName: "arrow.up.right")
-                        .foregroundColor(Color.green)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .foregroundColor(Color.green)
                     }
                     
-                    Text(String(describing: stock.change))
+//                    Text(String(describing: stock.change))
+                    Text("\(stock.change, specifier: "%.2f")")
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .font(.subheadline)
                         .if(stock.change < 0) {
                             $0.foregroundColor(Color.red)
                         }
@@ -60,13 +69,11 @@ struct StockRow: View {
                         }
                 }
                 
-//                    .multilineTextAlignment(.trailing)
                     
             }
             .padding()
             
         }
-//        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 

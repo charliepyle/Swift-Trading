@@ -23,32 +23,46 @@ struct StockList: View {
                     
                     Text(getFormattedDate())
                     
-                    
-                    
-                    ForEach(
-                        userData.stocks
-                            .filter
-                        {stock in
-                                searchBar.text.isEmpty ||
-                                    stock.ticker.lowercased().contains(searchBar.text.lowercased())
+                    Section(header: Text("Portfolio")) {
+                        VStack {
+                            Text("Net Worth")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            Text("\(userData.netWorth, specifier: "%.2f")")
+                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                    ) { stock in
-                        NavigationLink(
-//                            destination: StockDetail(stock: stock).environmentObject(self.userData)) {
-                        destination: StockDetail(stock: stock)) {
-                            StockRow(stock: stock)
+
+                        ForEach(
+                            userData.stocks
+                                .filter
+                            {stock in
+                                    searchBar.text.isEmpty ||
+                                        stock.ticker.lowercased().contains(searchBar.text.lowercased())
+                            }
+                        ) { stock in
+                            NavigationLink(
+    //                            destination: StockDetail(stock: stock).environmentObject(self.userData)) {
+                            destination: StockDetail(stock: stock)) {
+                                StockRow(stock: stock)
+                            }
                         }
+                        .onMove(perform:moveStocks)
+                        .onDelete(perform:deleteStocks)
                     }
-                    .onMove(perform:moveStocks)
-                    .onDelete(perform:deleteStocks)
+                    
+                    Section(header: Text("Favorites")) {
+                        
+                    }
+                    
+                   
 //                    .environmentObject(self.userData)
                     
-                    Text("Favorites")
-                        .multilineTextAlignment(.leading)
-                        .padding([.top, .leading, .bottom], 10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color(red: 0.8, green: 0.8, blue: 0.8, opacity: 1.0))
-                        .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0))
+//                    Text("Favorites")
+//                        .multilineTextAlignment(.leading)
+//                        .padding([.top, .leading, .bottom], 10)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .background(Color(red: 0.8, green: 0.8, blue: 0.8, opacity: 1.0))
+//                        .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0))
                 }
                 .navigationBarTitle(Text("Stocks"))
                 .add(self.searchBar)
