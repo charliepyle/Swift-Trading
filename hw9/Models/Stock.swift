@@ -24,5 +24,3 @@ struct Stock: Hashable, Codable, Identifiable {
     var volume: Float
     var about: String
 }
-
-

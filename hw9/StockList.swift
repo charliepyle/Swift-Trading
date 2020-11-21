@@ -9,7 +9,8 @@ import SwiftUI
 
 struct StockList: View {
     @State var searchText: String = ""
-    @ObservedObject var userData: UserData = UserData()
+//    @ObservedObject var userData: UserData = UserData()
+    @EnvironmentObject var userData: UserData
     @ObservedObject var searchBar: SearchBar = SearchBar()
     
     var body: some View {
@@ -50,7 +51,22 @@ struct StockList: View {
                     }
                     
                     Section(header: Text("Favorites")) {
-                        
+                        ForEach(
+                            userData.favorites
+                                .filter
+                            {stock in
+                                    searchBar.text.isEmpty ||
+                                        stock.ticker.lowercased().contains(searchBar.text.lowercased())
+                            }
+                        ) { stock in
+                            NavigationLink(
+                            destination: StockDetail(stock: stock).environmentObject(userData)) {
+                                StockRow(stock: stock)
+                                    
+                            }
+                        }
+                        .onMove(perform:moveStocks)
+                        .onDelete(perform:deleteStocks)
                     }
                     
                     Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
@@ -118,7 +134,7 @@ struct StockList: View {
 struct StockList_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            StockList()
+            StockList().environmentObject(UserData())
         }
     }
 }

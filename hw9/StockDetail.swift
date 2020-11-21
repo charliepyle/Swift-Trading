@@ -10,6 +10,7 @@ import SwiftUI
 struct StockDetail: View {
     @EnvironmentObject var userData: UserData
     @State private var showMore = false
+    @State var showingTrade = false
     var rows: [GridItem] =
         Array(repeating: .init(.flexible()), count: 3)
     var stock: Stock
@@ -69,7 +70,7 @@ struct StockDetail: View {
                 
                 else {
                     VStack {
-                        Text("Shares Owned: \(stock.shares, specifier: "%.2f")")
+                        Text("Shares Owned: \(stock.shares, specifier: "%.4f")")
                             .font(.footnote)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading)
@@ -81,14 +82,16 @@ struct StockDetail: View {
                     }
                 }
                 
+                Spacer()
+                
                 Button(action: {
-                        showMore = !showMore
-
+                    showingTrade.toggle()
                 }) {
                     Text("Trade!")
-                        
+                }.sheet(isPresented: $showingTrade) {
+                    TradeSheet(isPresented: $showingTrade, stock: stock)
                 }
-                .padding(.all, 27.0)
+                .padding(EdgeInsets(top: 15, leading: 50, bottom: 15, trailing: 50))
                 .background(Color.green)
                 .foregroundColor(.white)
                 .font(.headline).cornerRadius(40)
@@ -156,7 +159,7 @@ struct StockDetail: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
                     Button(action: {
-                            showMore = !showMore
+                        showMore.toggle()
 
                     }) {
                         Text("Show more...")
@@ -173,7 +176,7 @@ struct StockDetail: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     Button(action: {
-                            showMore = !showMore
+                        showMore.toggle()
 
                     }) {
                         Text("Show less")
@@ -185,6 +188,13 @@ struct StockDetail: View {
 
                 }
                 
+            }
+            .toolbar {
+                Button(action: {
+                    userData.favorites.append(stock)
+                }) {
+                    Image(systemName: "plus.circle")
+                }
             }
             
             

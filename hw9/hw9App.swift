@@ -12,6 +12,7 @@ struct hw9App: App {
     var body: some Scene {
         WindowGroup {
             StockList()
+                .environmentObject(UserData())
         }
     }
 }

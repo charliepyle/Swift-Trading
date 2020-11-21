@@ -21,6 +21,7 @@
 		460BDD5A2564FD2500A39ACD /* stocks.json in Resources */ = {isa = PBXBuildFile; fileRef = 460BDD592564FD2500A39ACD /* stocks.json */; };
 		460BDD62256502CA00A39ACD /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD61256502CA00A39ACD /* SearchBar.swift */; };
 		460BDD702567522B00A39ACD /* ViewControllerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */; };
+		4674495A2568FB1F007DF90A /* TradeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467449592568FB1F007DF90A /* TradeSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		460BDD592564FD2500A39ACD /* stocks.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = stocks.json; path = ../../../../../../../.Trash/stocks.json; sourceTree = "<group>"; };
 		460BDD61256502CA00A39ACD /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerResolver.swift; sourceTree = "<group>"; };
+		467449592568FB1F007DF90A /* TradeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				460BDD242564DBA300A39ACD /* Models */,
 				460BDCF425649BCB00A39ACD /* hw9App.swift */,
 				460BDCF625649BCB00A39ACD /* StockList.swift */,
+				467449592568FB1F007DF90A /* TradeSheet.swift */,
 				460BDD61256502CA00A39ACD /* SearchBar.swift */,
 				460BDD6F2567522B00A39ACD /* ViewControllerResolver.swift */,
 				460BDD432564EA6F00A39ACD /* StockRow.swift */,
@@ -310,6 +313,7 @@
 				460BDD442564EA6F00A39ACD /* StockRow.swift in Sources */,
 				460BDD372564DF2E00A39ACD /* UserData.swift in Sources */,
 				460BDD262564DBB400A39ACD /* Stock.swift in Sources */,
+				4674495A2568FB1F007DF90A /* TradeSheet.swift in Sources */,
 				460BDD62256502CA00A39ACD /* SearchBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
