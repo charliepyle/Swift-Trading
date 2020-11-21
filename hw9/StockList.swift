@@ -11,17 +11,17 @@ struct StockList: View {
     @State var searchText: String = ""
     @ObservedObject var userData: UserData = UserData()
     @ObservedObject var searchBar: SearchBar = SearchBar()
-//    var stockString = userData.stocks.map { $0.ticker }
-//    @State var searchString: String
     
     var body: some View {
         NavigationView {
                 
                 List {
-//                    SearchBar(text: $searchText)
                     
                     
                     Text(getFormattedDate())
+                        .fontWeight(.bold)
+                        .font(.title2)
+                        .foregroundColor(Color.gray)
                     
                     Section(header: Text("Portfolio")) {
                         VStack {
@@ -41,7 +41,6 @@ struct StockList: View {
                             }
                         ) { stock in
                             NavigationLink(
-    //                            destination: StockDetail(stock: stock).environmentObject(self.userData)) {
                             destination: StockDetail(stock: stock)) {
                                 StockRow(stock: stock)
                             }
@@ -54,23 +53,17 @@ struct StockList: View {
                         
                     }
                     
-                   
-//                    .environmentObject(self.userData)
-                    
-//                    Text("Favorites")
-//                        .multilineTextAlignment(.leading)
-//                        .padding([.top, .leading, .bottom], 10)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .background(Color(red: 0.8, green: 0.8, blue: 0.8, opacity: 1.0))
-//                        .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3, opacity: 1.0))
+                    Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .font(.footnote)
+                        .foregroundColor(Color.gray)
+
                 }
                 .navigationBarTitle(Text("Stocks"))
                 .add(self.searchBar)
                 .toolbar {
                     EditButton()
                 }
-            
-            
         }
         
         
@@ -92,7 +85,16 @@ struct StockList: View {
                                    ticker: "fuck!",
             name: "fuck!!",
             price: 10,
-            change: 78))
+            change: 78,
+            marketValue: 10000,
+            currentPrice: 100000,
+            low: 100000,
+            bidPrice: 100000,
+            openPrice: 100000,
+            mid: 100000,
+            high: 10,
+            volume: 10,
+            about: "about"))
         }
     }
     
@@ -118,6 +120,5 @@ struct StockList_Previews: PreviewProvider {
         Group {
             StockList()
         }
-//        .environmentObject(UserData())
     }
 }

@@ -54,7 +54,6 @@ struct StockRow: View {
                             .foregroundColor(Color.green)
                     }
                     
-//                    Text(String(describing: stock.change))
                     Text("\(stock.change, specifier: "%.2f")")
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .font(.subheadline)
@@ -68,6 +67,7 @@ struct StockRow: View {
                             $0.foregroundColor(Color.green)
                         }
                 }
+                
                 
                     
             }
