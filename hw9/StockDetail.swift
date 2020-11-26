@@ -85,11 +85,13 @@ struct StockDetail: View {
                 Spacer()
                 
                 Button(action: {
-                    showingTrade.toggle()
+                    showingTrade = true
                 }) {
                     Text("Trade!")
                 }.sheet(isPresented: $showingTrade) {
-                    TradeSheet(isPresented: $showingTrade, stock: stock)
+                    TradeSheet(isPresented: self.$showingTrade,
+//                    isPresented: self.$showingTrade,
+                    stock: stock)
                 }
                 .padding(EdgeInsets(top: 15, leading: 50, bottom: 15, trailing: 50))
                 .background(Color.green)
