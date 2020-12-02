@@ -33,7 +33,7 @@ struct TradeSheet: View {
                 
                 
             }
-            Text("Trade \(stock.name) shares")
+            Text("Trade \(stock.companyName) shares")
                 .font(.subheadline)
                 .fontWeight(.bold)
             
@@ -71,8 +71,8 @@ struct TradeSheet: View {
                 Spacer()
                 Group {
                     let floatShares = Float(self.numShares) ?? 0.0
-                    let multipliedValue = stock.price * floatShares
-                    Text("x \(stock.price, specifier: "%.2f")/share = $\(multipliedValue, specifier: "%.2f")")
+                    let multipliedValue = stock.lastPrice * floatShares
+                    Text("x \(stock.lastPrice, specifier: "%.2f")/share = $\(multipliedValue, specifier: "%.2f")")
                 }
                 .padding(.trailing)
                 
@@ -88,7 +88,7 @@ struct TradeSheet: View {
             HStack {
                 Button(action: {
                     let doubleNumShares = Double(numShares) ?? 0.0
-                    let cost = Double(stock.price) * doubleNumShares
+                    let cost = Double(stock.lastPrice) * doubleNumShares
                     
                     
                 
@@ -111,9 +111,9 @@ struct TradeSheet: View {
                 
                 Button(action: {
                     let doubleNumShares = Double(numShares) ?? 0.0
-                    let cost = Double(stock.price) * doubleNumShares
+                    let cost = Double(stock.lastPrice) * doubleNumShares
                     
-//                    let stock_info = ["purchasedPrice": stock.price, "quantity": Float(self.numShares) ?? 0.0]
+//                    let stock_info = ["purchasedlastPrice": stock.lastPrice, "quantity": Float(self.numShares) ?? 0.0]
                     
 //                    var retrieved_stock = userData.purchasedStocks[stock.ticker]
                     userData.netWorth += cost

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StockRow: View {
     var stock: Stock
+    @EnvironmentObject var userData: UserData
     
     
     var body: some View {
@@ -19,14 +20,15 @@ struct StockRow: View {
                     .font(.title3)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                if (stock.shares.isZero) {
-                    Text(stock.name)
+//                if (stock.shares.isZero) {
+                if (userData.shares == 0) {
+                    Text(stock.companyName)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
                         .foregroundColor(Color.gray)
                 }
                 else {
-                    Text("\(stock.shares, specifier: "%.2f") shares")
+                    Text("\(userData.shares, specifier: "%.2f") shares")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
                         .foregroundColor(Color.gray)
@@ -37,33 +39,33 @@ struct StockRow: View {
             Spacer()
             
             VStack(spacing:0) {
-                Text("\(stock.price, specifier: "%.2f")")
+                Text("\(stock.lastPrice, specifier: "%.2f")")
                     .fontWeight(.bold)
                     .font(.subheadline)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     
                 HStack {
-                    if (stock.change < 0) {
+                    if (Float(stock.change)! < 0) {
                         Image(systemName: "arrow.down.right")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                         .foregroundColor(Color.red)
                     }
-                    if (stock.change > 0) {
+                    if (Float(stock.change)! > 0) {
                         Image(systemName: "arrow.up.right")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .foregroundColor(Color.green)
                     }
                     
-                    Text("\(stock.change, specifier: "%.2f")")
+                    Text("\(Float(stock.change)!, specifier: "%.2f")")
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .font(.subheadline)
-                        .if(stock.change < 0) {
+                        .if(Float(stock.change)! < 0) {
                             $0.foregroundColor(Color.red)
                         }
-                        .if(stock.change == 0) {
+                        .if(Float(stock.change)! == 0) {
                             $0.foregroundColor(Color.black)
                         }
-                        .if(stock.change > 0) {
+                        .if(Float(stock.change)! > 0) {
                             $0.foregroundColor(Color.green)
                         }
                 }

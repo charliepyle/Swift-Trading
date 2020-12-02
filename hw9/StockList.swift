@@ -8,71 +8,75 @@
 import SwiftUI
 
 struct StockList: View {
-    @State var searchText: String = ""
-//    @ObservedObject var userData: UserData = UserData()
     @EnvironmentObject var userData: UserData
     @ObservedObject var searchBar: SearchBar = SearchBar()
+    @State var searchResults:[StockSearch] = []
     
     var body: some View {
         NavigationView {
                 
                 List {
                     
-                    
-                    Text(getFormattedDate())
-                        .fontWeight(.bold)
-                        .font(.title2)
-                        .foregroundColor(Color.gray)
-                    
-                    Section(header: Text("Portfolio")) {
-                        VStack {
-                            Text("Net Worth")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Text("\(userData.netWorth, specifier: "%.2f")")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                    if (searchBar.text.isEmpty) {
+                        Text(getFormattedDate())
+                            .fontWeight(.bold)
+                            .font(.title2)
+                            .foregroundColor(Color.gray)
+                        
+                        Section(header: Text("Portfolio")) {
+                            VStack {
+                                Text("Net Worth")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Text("\(userData.netWorth, specifier: "%.2f")")
+                                    .fontWeight(.bold)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
 
-                        ForEach(
-                            userData.stocks
-                                .filter
-                            {stock in
-                                    searchBar.text.isEmpty ||
-                                        stock.ticker.lowercased().contains(searchBar.text.lowercased())
+                            ForEach(
+                                userData.stocks, id: \.ticker
+                            ) { stock in
+                                NavigationLink(
+                                    destination: StockDetail(stockString: stock.ticker)) {
+                                    StockRow(stock: stock).environmentObject(userData)
+                                }
                             }
-                        ) { stock in
-                            NavigationLink(
-                            destination: StockDetail(stock: stock)) {
-                                StockRow(stock: stock)
-                            }
+                            .onMove(perform:moveStocks)
+                            .onDelete(perform:deleteStocks)
                         }
-                        .onMove(perform:moveStocks)
-                        .onDelete(perform:deleteStocks)
+                        
+                        Section(header: Text("Favorites")) {
+                            ForEach(
+                                userData.favorites, id: \.ticker
+                            ) { stock in
+                                NavigationLink(
+                                destination: StockDetail(stockString: stock.ticker).environmentObject(userData)) {
+                                    StockRow(stock: stock).environmentObject(userData)
+                                        
+                                }
+                            }
+                            .onMove(perform:moveStocks)
+                            .onDelete(perform:deleteStocks)
+                        }
+                        
+                        Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .font(.footnote)
+                            .foregroundColor(Color.gray)
                     }
                     
-                    Section(header: Text("Favorites")) {
-                        ForEach(
-                            userData.favorites
-                                .filter
-                            {stock in
-                                    searchBar.text.isEmpty ||
-                                        stock.ticker.lowercased().contains(searchBar.text.lowercased())
-                            }
-                        ) { stock in
-                            NavigationLink(
-                            destination: StockDetail(stock: stock).environmentObject(userData)) {
-                                StockRow(stock: stock)
+                    else {
+                        Section {
+                            ForEach(
+                                searchBar.searchResults, id: \.ticker) { stock in
+                                
+                                NavigationLink(
                                     
+                                    destination: StockDetail(stockString: stock.ticker).environmentObject(userData)) {
+                                    SearchRow(stockSearch: stock)
+                                }
                             }
                         }
-                        .onMove(perform:moveStocks)
-                        .onDelete(perform:deleteStocks)
                     }
-                    
-                    Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .font(.footnote)
-                        .foregroundColor(Color.gray)
 
                 }
                 .navigationBarTitle(Text("Stocks"))
@@ -94,25 +98,6 @@ struct StockList: View {
         return dateFormatter.string(from: date)
     }
     
-    func addStock() {
-        withAnimation {
-            userData.stocks.append(Stock(id: 11,
-                                         shares: 10,
-                                   ticker: "fuck!",
-            name: "fuck!!",
-            price: 10,
-            change: 78,
-            marketValue: 10000,
-            currentPrice: 100000,
-            low: 100000,
-            bidPrice: 100000,
-            openPrice: 100000,
-            mid: 100000,
-            high: 10,
-            volume: 10,
-            about: "about"))
-        }
-    }
     
     func moveStocks(from: IndexSet, to: Int) {
         withAnimation {

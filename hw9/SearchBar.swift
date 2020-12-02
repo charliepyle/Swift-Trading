@@ -11,6 +11,7 @@ import SwiftUI
 class SearchBar: NSObject, ObservableObject {
     
     @Published var text: String = ""
+    @Published var searchResults:[StockSearch] = []
     let searchController: UISearchController = UISearchController(searchResultsController: nil)
     
     override init() {
@@ -27,7 +28,30 @@ extension SearchBar: UISearchResultsUpdating {
         // Publish search bar text changes.
         if let searchBarText = searchController.searchBar.text {
             self.text = searchBarText
+            getSearchResults()
         }
+    }
+    
+    func getSearchResults() {
+        
+        guard let url = URL(string: "https://hw8-usc.wl.r.appspot.com/api/autocomplete/\(self.text)")
+        else {
+            print("Bad URL")
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let data = data {
+                        if let response = try? JSONDecoder().decode([StockSearch].self, from: data) {
+                            DispatchQueue.main.async {
+                                self.searchResults = response
+                            }
+                            return
+                        }
+                    }
+                }.resume()
     }
 }
 
@@ -52,38 +76,3 @@ extension View {
         return self.modifier(SearchBarModifier(searchBar: searchBar))
     }
 }
-//struct SearchBar: UIViewRepresentable {
-//
-//    @Binding var text: String
-//    var placeholder: String
-//
-//    class Coordinator: NSObject, UISearchBarDelegate {
-//
-//        @Binding var text: String
-//
-//        init(text: Binding<String>) {
-//            _text = text
-//        }
-//
-//        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//            text = searchText
-//        }
-//    }
-//
-//    func makeCoordinator() -> SearchBar.Coordinator {
-//        return Coordinator(text: $text)
-//    }
-//
-//    func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
-//        let searchBar = UISearchBar(frame: .zero)
-//        searchBar.delegate = context.coordinator
-//        searchBar.placeholder = placeholder
-//        searchBar.searchBarStyle = .minimal
-//        searchBar.autocapitalizationType = .none
-//        return searchBar
-//    }
-//
-//    func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
-//        uiView.text = text
-//    }
-//}

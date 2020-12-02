@@ -3,4 +3,70 @@
    uuid = "D290F1EF-EA66-49A4-9650-4BDBF901125D"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "768D3173-09EE-4CC2-A86C-0B4DF0F6A70E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "hw9/StockFetchModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "updateStock(stockString:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0E5DA16F-3527-46F1-AA64-7EF964D3C0E6"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "hw9/StockFetchModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "updateStock(stockString:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0E5DA16F-3527-46F1-AA64-7EF964D3C0E6 - 9c2717f6ed0e8187"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in hw9.StockFetchModel.updateStock(stockString: Swift.String) -&gt; ()"
+                  moduleName = "hw9"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/cpyle/Documents/fall/571/hw9/hw9/hw9/StockFetchModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "309">
+               </Location>
+               <Location
+                  uuid = "0E5DA16F-3527-46F1-AA64-7EF964D3C0E6 - 6c750b293b5ef2f1"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in (extension in hw9_PreviewReplacement_StockFetchModel_6):hw9.StockFetchModel.(__preview__updateStock in _0FB92C144857F4A37136BA350B38B654)(stockString: Swift.String) -&gt; ()"
+                  moduleName = "StockFetchModel.6.preview-thunk.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/cpyle/Documents/fall/571/hw9/hw9/hw9/StockFetchModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "309">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

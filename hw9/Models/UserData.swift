@@ -13,5 +13,6 @@ final class UserData: ObservableObject {
     @Published var stocks = stockData
     @Published var favorites:[Stock] = []
     @Published var purchasedStocks: [String:Double] = [:]
+    @Published var shares = 10
 }
 
