@@ -99,6 +99,7 @@ struct TradeSheet: View {
                     
                     if (userData.purchasedStocks[stock.ticker] == nil) {
                         userData.purchasedStocks[stock.ticker] = doubleNumShares
+                        userData.stockRows.append(StockRowModel(ticker: stock.ticker, companyName: stock.companyName, lastPrice: stock.lastPrice, change: stock.change))
                     }
                     else {
                         userData.purchasedStocks[stock.ticker]! += doubleNumShares
@@ -140,6 +141,8 @@ struct TradeSheet: View {
                     userData.purchasedStocks = fetch(key: "purchasedStocks")!
                     
                     userData.purchasedStocks[stock.ticker]! -= doubleNumShares
+                    
+                    
 
                     var cash = defaults.float(forKey: "cash")
                     cash += Float(cost)

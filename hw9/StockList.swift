@@ -16,7 +16,7 @@ struct StockList: View {
     
     var body: some View {
         NavigationView {
-            if (!stockFetchModel.dataReceived) {
+            if (!stockFetchModel.dataReceived && !userData.purchasedStocksStrings.isEmpty && false) {
                 ProgressView()
                 Text("Fetching Data")
                     .font(.footnote)
@@ -45,13 +45,16 @@ struct StockList: View {
 
                             ForEach(
 //                                userData.purchasedStocksStrings, id: \.self
-                                stockFetchModel.stockRows, id: \.ticker
+                                userData.stockRows, id: \.ticker
                             ) { stock in
-                                let numShares: Float = userData.purchasedStocks[stock.ticker]!
-                                NavigationLink(
-                                    destination: StockDetail(stockString: stock.ticker)) {
-                                    StockRow(stockString: stock.ticker, numShares: numShares, lastPrice: stock.lastPrice!, change: stock.change).environmentObject(userData)
+                                if (userData.purchasedStocks[stock.ticker] != nil) {
+                                    let numShares: Float = userData.purchasedStocks[stock.ticker]!
+                                    NavigationLink(
+                                        destination: StockDetail(stockString: stock.ticker)) {
+                                        StockRow(stockString: stock.ticker, numShares: numShares, lastPrice: stock.lastPrice!, change: stock.change).environmentObject(userData)
+                                    }
                                 }
+                                
                             }
                             .onMove(perform:moveStocks)
 //                            .onDelete(perform:deleteStocks)
@@ -107,8 +110,6 @@ struct StockList: View {
         }.onAppear {
             
             let defaults = UserDefaults.standard
-            defaults.set(20000, forKey: "netWorth")
-            defaults.set(20000, forKey: "cash")
             let favoritesArray = defaults.stringArray(forKey: "favorites")
             let purchasedArray = defaults.stringArray(forKey: "purchasedStrings")
             let purchasedDictionary = fetch(key: "purchasedStocks")
@@ -130,6 +131,8 @@ struct StockList: View {
             }
             
             stockFetchModel.updateStockRows(stockString: queryString)
+            
+            userData.stockRows = stockFetchModel.stockRows
             
             var netWorth = defaults.float(forKey: "cash")
             

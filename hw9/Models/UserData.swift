@@ -14,5 +14,6 @@ final class UserData: ObservableObject {
     @Published var favorites:[String] = []
     @Published var purchasedStocks: [String:Float] = [:]
     @Published var purchasedStocksStrings: [String] = []
+    @Published var stockRows: [StockRowModel] = []
 }
 

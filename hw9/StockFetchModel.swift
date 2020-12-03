@@ -71,13 +71,14 @@ class StockFetchModel: ObservableObject {
             print("Bad URL")
             return
         }
-        
+        let defaults = UserDefaults.standard
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                         if let response = try? JSONDecoder().decode([StockRowModel].self, from: data) {
                             DispatchQueue.main.async {
                                 self.stockRows = response
+//                                eventually plan to put global var here for stocks to render
                                 self.dataReceived = true
                             }
                             return
@@ -85,6 +86,17 @@ class StockFetchModel: ObservableObject {
                     }
                 }.resume()
         
+    }
+    
+    func store(dictionary: [String: Float], key: String) {
+        var data: Data?
+        let encoder = JSONEncoder()
+        do {
+            data = try encoder.encode(dictionary)
+        } catch {
+            print("failed to get data")
+        }
+        UserDefaults.standard.set(data, forKey: key)
     }
     
     
