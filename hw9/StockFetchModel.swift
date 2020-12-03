@@ -14,6 +14,7 @@ class StockFetchModel: ObservableObject {
     
     @Published var stock: Stock?
     @Published var stockRow: StockRowModel?
+    @Published var stockRows: [StockRowModel] = []
     @Published var dataReceived = false
     
     
@@ -51,9 +52,32 @@ class StockFetchModel: ObservableObject {
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
-                        if let response = try? JSONDecoder().decode(StockRowModel.self, from: data) {
+                        if let response = try? JSONDecoder().decode([StockRowModel].self, from: data) {
                             DispatchQueue.main.async {
-                                self.stockRow = response
+                                self.stockRow = response[0]
+                                self.dataReceived = true
+                            }
+                            return
+                        }
+                    }
+                }.resume()
+        
+    }
+    
+    func updateStockRows(stockString: String) {
+        
+        guard let url = URL(string: "https://hw8-usc.wl.r.appspot.com/api/tickers/\(stockString)")
+        else {
+            print("Bad URL")
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                        if let response = try? JSONDecoder().decode([StockRowModel].self, from: data) {
+                            DispatchQueue.main.async {
+                                self.stockRows = response
                                 self.dataReceived = true
                             }
                             return

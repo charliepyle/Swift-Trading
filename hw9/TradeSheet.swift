@@ -79,8 +79,9 @@ struct TradeSheet: View {
             }
             
             Spacer()
-            
-            Text("$\(userData.cash, specifier: "%.2f") available to buy \(stock.ticker)")
+            let defaults = UserDefaults.standard
+            let cash = defaults.float(forKey: "cash")
+            Text("$\(cash, specifier: "%.2f") available to buy \(stock.ticker)")
                 .font(.footnote)
                 .padding()
                 .foregroundColor(.gray)
@@ -102,17 +103,17 @@ struct TradeSheet: View {
                     else {
                         userData.purchasedStocks[stock.ticker]! += doubleNumShares
                     }
-                    userData.cash -= Double(cost)
+                    
+                    var cash = defaults.float(forKey: "cash")
+                    cash -= Float(cost)
                     
 
-                    defaults.set(userData.cash, forKey: "cash")
+                    defaults.set(cash, forKey: "cash")
                     
-                    var stockStrings:[String] = userData.purchasedStocksStrings
-                    
-                    if !stockStrings.contains(stock.ticker) {
-                        stockStrings.append(stock.ticker)
+                    if !userData.purchasedStocksStrings.contains(stock.ticker) {
+                        userData.purchasedStocksStrings.append(stock.ticker)
                     }
-                    defaults.set(stockStrings, forKey: "purchasedStrings")
+                    defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
                     
                     store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
                     
@@ -135,21 +136,23 @@ struct TradeSheet: View {
                     let cost = Float(stock.lastPrice) * doubleNumShares
                     
                     let defaults = UserDefaults.standard
+                    
                     userData.purchasedStocks = fetch(key: "purchasedStocks")!
-
-                    userData.cash += Double(cost)
+                    
                     userData.purchasedStocks[stock.ticker]! -= doubleNumShares
+
+                    var cash = defaults.float(forKey: "cash")
+                    cash += Float(cost)
                     
-                    
-                    defaults.set(userData.cash, forKey: "cash")
-                    
-                    var stockStrings:[String] = userData.purchasedStocksStrings
-                    if Int(numShares) == 0 {
+
+                    defaults.set(cash, forKey: "cash")
+                    print(userData.purchasedStocks[stock.ticker]!)
+                    if Int(userData.purchasedStocks[stock.ticker]!) == 0 {
                         if let index = userData.purchasedStocksStrings.firstIndex(of: stock.ticker) {
-                            stockStrings.remove(at: index)
+                            userData.purchasedStocksStrings.remove(at: index)
                         }
                         
-                        defaults.set(stockStrings, forKey: "purchasedStrings")
+                        defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
                         
                         userData.purchasedStocks.removeValue(forKey: stock.ticker)
                         
@@ -159,8 +162,6 @@ struct TradeSheet: View {
                         store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
                     }
                     
-                    
-//                    userData.netWorth += cost
                     
                     transactionMade = true
                     let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"

@@ -11,12 +11,12 @@ import Foundation
 struct StockList: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var searchBar: SearchBar = SearchBar()
+    @ObservedObject var stockFetchModel = StockFetchModel()
     @State var searchResults:[StockSearch] = []
-    @State var stillLoading: Bool = false
     
     var body: some View {
         NavigationView {
-            if (stillLoading) {
+            if (!stockFetchModel.dataReceived) {
                 ProgressView()
                 Text("Fetching Data")
                     .font(.footnote)
@@ -31,25 +31,26 @@ struct StockList: View {
                             .foregroundColor(Color.gray)
 
                         Section(header: Text("Portfolio")) {
+                            let defaults = UserDefaults.standard
                             VStack {
                                 Text("Net Worth")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Text("\(userData.netWorth, specifier: "%.2f")")
+                                Text("\(defaults.float(forKey: "netWorth"), specifier: "%.2f")")
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
-                            let defaults = UserDefaults.standard
-                            let purchasedStockStrings = defaults.stringArray(forKey: "purchasedStrings") ?? [String]()
+//                            let defaults = UserDefaults.standard
+//                            let purchasedStockStrings = defaults.stringArray(forKey: "purchasedStrings") ?? [String]()
 
                             ForEach(
 //                                userData.purchasedStocksStrings, id: \.self
-                                purchasedStockStrings, id: \.self
+                                stockFetchModel.stockRows, id: \.ticker
                             ) { stock in
-                                let numShares: Float = userData.purchasedStocks[stock]!
+                                let numShares: Float = userData.purchasedStocks[stock.ticker]!
                                 NavigationLink(
-                                    destination: StockDetail(stockString: stock)) {
-                                    StockRow(stockString: stock, numShares: numShares).environmentObject(userData)
+                                    destination: StockDetail(stockString: stock.ticker)) {
+                                    StockRow(stockString: stock.ticker, numShares: numShares, lastPrice: stock.lastPrice!, change: stock.change).environmentObject(userData)
                                 }
                             }
                             .onMove(perform:moveStocks)
@@ -72,7 +73,7 @@ struct StockList: View {
 
                                 }
                             }
-                            .onMove(perform:moveStocks)
+                            .onMove(perform:moveFavoriteStocks)
                             .onDelete(perform:deleteFavoriteStocks)
                         }
 //
@@ -104,7 +105,10 @@ struct StockList: View {
                 }
             }
         }.onAppear {
+            
             let defaults = UserDefaults.standard
+            defaults.set(20000, forKey: "netWorth")
+            defaults.set(20000, forKey: "cash")
             let favoritesArray = defaults.stringArray(forKey: "favorites")
             let purchasedArray = defaults.stringArray(forKey: "purchasedStrings")
             let purchasedDictionary = fetch(key: "purchasedStocks")
@@ -117,6 +121,29 @@ struct StockList: View {
             if (purchasedDictionary != nil) {
                 userData.purchasedStocks = purchasedDictionary!
             }
+            
+            var queryString = ""
+            
+            for string in userData.purchasedStocksStrings {
+                let stringToAdd = string.uppercased() + ","
+                queryString += stringToAdd
+            }
+            
+            stockFetchModel.updateStockRows(stockString: queryString)
+            
+            var netWorth = defaults.float(forKey: "cash")
+            
+            for stockRow in stockFetchModel.stockRows {
+                netWorth += Float(Double((stockRow.lastPrice! * userData.purchasedStocks[stockRow.ticker]!)))
+            }
+            
+//            defaults.set(netWorth, forKey: "netWorth")
+            
+//            userData.netWorth = netWorth
+//            defaults.set(userData.netWorth, forKey: "netWorth")
+            
+            
+            
             
         }
         
@@ -150,29 +177,28 @@ struct StockList: View {
     
     func moveStocks(from source: IndexSet, to destination: Int) {
         withAnimation {
-            var stocks:[String] = userData.purchasedStocksStrings
-            stocks.move(fromOffsets: source, toOffset: destination)
+//            var stocks:[String] = userData.purchasedStocksStrings
+            userData.purchasedStocksStrings.move(fromOffsets: source, toOffset: destination)
+            stockFetchModel.stockRows.move(fromOffsets: source, toOffset: destination)
             let defaults = UserDefaults.standard
-            defaults.set(stocks, forKey: "purchasedStrings")
+            defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
         }
     }
     
     
     func moveFavoriteStocks(from source: IndexSet, to destination: Int) {
         withAnimation {
-            var stocks:[String] = userData.favorites
-            stocks.move(fromOffsets: source, toOffset: destination)
+            userData.favorites.move(fromOffsets: source, toOffset: destination)
             let defaults = UserDefaults.standard
-            defaults.set(stocks, forKey: "favorites")
+            defaults.set(userData.favorites, forKey: "favorites")
         }
     }
     
     func deleteFavoriteStocks(offsets: IndexSet) {
         withAnimation {
-            var stocks:[String] = userData.favorites
-            stocks.remove(atOffsets: offsets)
+            userData.favorites.remove(atOffsets: offsets)
             let defaults = UserDefaults.standard
-            defaults.set(stocks, forKey: "favorites")
+            defaults.set(userData.favorites, forKey: "favorites")
         }
     }
     

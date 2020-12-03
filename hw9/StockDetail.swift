@@ -70,12 +70,15 @@ struct StockDetail: View {
 //                        if (userData.purchasedStocks[stock.ticker] == 0) {
 //                        let hasStock = userData.purchasedStocks[stock.ticker]
                         let dictionary = fetch(key: "purchasedStocks")
-                        let hasStock = ((dictionary == nil || dictionary![stock.ticker] == 0) ? 0 : dictionary![stock.ticker])
+                        let hasStock: Float = (userData.purchasedStocks[stockFetchModel.stock!.ticker] == nil ? 0.0 : userData.purchasedStocks[stockFetchModel.stock!.ticker])!
+//                        let hasStock = ((dictionary == nil || dictionary![stock.ticker] == nil) ? 0 : dictionary![stock.ticker])
 //                        if dictionary != nil {
 //                            hasStock = dictionary[stock.ticker]
 //                        }
                        
-                        let netWorth = (hasStock == nil ? 0 : hasStock! * stockFetchModel.stock!.lastPrice)
+//                        let netWorth = (hasStock == nil ? 0 : hasStock! * stockFetchModel.stock!.lastPrice)
+                        
+                        let netWorth = hasStock * stockFetchModel.stock!.lastPrice
                         if (dictionary == nil || hasStock == 0) {
                             VStack {
                                 Text("You have 0 shares of \(stockFetchModel.stock!.ticker).")
@@ -92,7 +95,7 @@ struct StockDetail: View {
 
                         else {
                             VStack {
-                                Text("Shares Owned: \(hasStock!, specifier: "%.4f")")
+                                Text("Shares Owned: \(hasStock, specifier: "%.4f")")
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.leading)
@@ -274,19 +277,6 @@ struct StockDetail: View {
                                 Image(systemName: "plus.circle")
                             }
                         }
-//                        Button(action: {
-//                            userData.favorites.append(stockFetchModel.stock!.ticker)
-//                            let defaults = UserDefaults.standard
-//                            defaults.set(userData.favorites, forKey: "favorites")
-//                        }) {
-//                            if userData.favorites.contains(stockFetchModel.stock!.ticker) {
-//                                Image(systemName: "plus.circle.fill")
-//                            }
-//                            else {
-//                                Image(systemName: "plus.circle")
-//                            }
-//
-//                        }
                     }
 
                     .navigationBarTitle(Text(stockFetchModel.stock!.ticker))
