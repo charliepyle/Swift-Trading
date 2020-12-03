@@ -21,14 +21,16 @@ struct StockDetail: View {
     
     init(stockString: String) {
         self.stockString = stockString
-        
+
         stockFetchModel.updateStock(stockString: stockString)
-//        print(stockFetchModel.stock)
     }
     
     var body: some View {
         if (!stockFetchModel.dataReceived) {
-            Text("Fuck!")
+            ProgressView()
+            Text("Fetching Data...")
+                .font(.footnote)
+                .foregroundColor(Color.gray)
         }
         else {
             ScrollView(.vertical) {
@@ -71,7 +73,8 @@ struct StockDetail: View {
 
                     HStack {
 //                        if (userData.purchasedStocks[stock.ticker] == 0) {
-                        if (true) {
+                        let hasStock = userData.purchasedStocks[stock.ticker]
+                        if (hasStock == nil || hasStock == 0) {
                             VStack {
                                 Text("You have 0 shares of \(stockFetchModel.stock!.ticker).")
                                     .font(.footnote)
@@ -214,16 +217,7 @@ struct StockDetail: View {
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding([.top, .leading])
-//
-//                        let n:News =  News(
-//                            url: "Google.com",
-//                            title: "Microsoft will reported allow employees to work from home permanently, the latest tech giant to ",
-//                            description: "desc",
-//                            source: "google.com",
-//                            urlToImage: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Golden_Retriever_Carlos_%2810581910556%29.jpg/440px-Golden_Retriever_Carlos_%2810581910556%29.jpg",
-//                            publishedAt: "today"
-//                        )
-                       
+
                         ForEach(stockFetchModel.stock!.news, id: \.url) { n in
                             NewsRow(news: n)
                                 .contextMenu {
@@ -253,11 +247,12 @@ struct StockDetail: View {
                         }
                         
                         
+                        
                     }
 
                     .toolbar {
                         Button(action: {
-                            userData.favorites.append(stockFetchModel.stock!)
+                            userData.favorites.append(stockFetchModel.stock!.ticker)
                         }) {
                             Image(systemName: "plus.circle")
                         }
@@ -280,7 +275,7 @@ struct StockDetail: View {
 struct StockDetail_Previews: PreviewProvider {
     static var previews: some View {
         let userData = UserData()
-        StockDetail(stockString: userData.stocks[0].ticker)
+        StockDetail(stockString: stockData[0].ticker)
             .environmentObject(userData)
     }
 }

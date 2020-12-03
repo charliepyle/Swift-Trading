@@ -11,18 +11,24 @@ struct StockList: View {
     @EnvironmentObject var userData: UserData
     @ObservedObject var searchBar: SearchBar = SearchBar()
     @State var searchResults:[StockSearch] = []
+    @State var stillLoading: Bool = false
     
     var body: some View {
         NavigationView {
-                
+            if (stillLoading) {
+                ProgressView()
+                Text("Fetching Data")
+                    .font(.footnote)
+                    .foregroundColor(Color.gray)
+            }
+            else {
                 List {
-                    
                     if (searchBar.text.isEmpty) {
                         Text(getFormattedDate())
                             .fontWeight(.bold)
                             .font(.title2)
                             .foregroundColor(Color.gray)
-                        
+
                         Section(header: Text("Portfolio")) {
                             VStack {
                                 Text("Net Worth")
@@ -33,44 +39,51 @@ struct StockList: View {
                             }
 
                             ForEach(
-                                userData.stocks, id: \.ticker
+                                userData.purchasedStocksStrings, id: \.self
                             ) { stock in
+//                                let numShares: Float = userData.purchasedStocks[]
+                                let numShares: Float = 0
                                 NavigationLink(
-                                    destination: StockDetail(stockString: stock.ticker)) {
-                                    StockRow(stock: stock).environmentObject(userData)
+                                    destination: StockDetail(stockString: stock)) {
+                                    StockRow(stockString: stock, numShares: numShares).environmentObject(userData)
                                 }
                             }
                             .onMove(perform:moveStocks)
                             .onDelete(perform:deleteStocks)
                         }
-                        
+
                         Section(header: Text("Favorites")) {
                             ForEach(
-                                userData.favorites, id: \.ticker
+                                userData.favorites, id: \.self
                             ) { stock in
+                                let numShares: Float = 0
+//                                let testShares: Float = userData.purchasedStocks[stock]
+//                                if (testShares) {
+//                                    numShares = testShares
+//                                }
                                 NavigationLink(
-                                destination: StockDetail(stockString: stock.ticker).environmentObject(userData)) {
-                                    StockRow(stock: stock).environmentObject(userData)
-                                        
+                                destination: StockDetail(stockString: stock).environmentObject(userData)) {
+                                    StockRow(stockString: stock, numShares: numShares).environmentObject(userData)
+
                                 }
                             }
                             .onMove(perform:moveStocks)
                             .onDelete(perform:deleteStocks)
                         }
-                        
-                        Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .font(.footnote)
-                            .foregroundColor(Color.gray)
+//
+//                        Link("Powered by Tiingo", destination: URL(string: "https://www.tiingo.com")!)
+//                            .frame(maxWidth: .infinity, alignment: .center)
+//                            .font(.footnote)
+//                            .foregroundColor(Color.gray)
                     }
-                    
+
                     else {
                         Section {
                             ForEach(
                                 searchBar.searchResults, id: \.ticker) { stock in
-                                
+
                                 NavigationLink(
-                                    
+
                                     destination: StockDetail(stockString: stock.ticker).environmentObject(userData)) {
                                     SearchRow(stockSearch: stock)
                                 }
@@ -84,6 +97,7 @@ struct StockList: View {
                 .toolbar {
                     EditButton()
                 }
+            }
         }
         
         
@@ -101,13 +115,15 @@ struct StockList: View {
     
     func moveStocks(from: IndexSet, to: Int) {
         withAnimation {
-            userData.stocks.move(fromOffsets: from, toOffset: to)
+            var stocks:[String] = userData.purchasedStocksStrings
+            stocks.move(fromOffsets: from, toOffset: to)
         }
     }
     
     func deleteStocks(offsets: IndexSet) {
         withAnimation {
-            userData.stocks.remove(atOffsets: offsets)
+            var stocks:[String] = userData.purchasedStocksStrings
+            stocks.remove(atOffsets: offsets)
         }
     }
     

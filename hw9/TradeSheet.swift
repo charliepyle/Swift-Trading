@@ -87,14 +87,14 @@ struct TradeSheet: View {
             
             HStack {
                 Button(action: {
-                    let doubleNumShares = Double(numShares) ?? 0.0
-                    let cost = Double(stock.lastPrice) * doubleNumShares
+                    let doubleNumShares = Float(numShares) ?? 0.0
+                    let cost = Float(stock.lastPrice) * doubleNumShares
                     
                     
                 
-                    userData.purchasedStocks[String(stock.ticker)] = doubleNumShares
+                    userData.purchasedStocks[stock.ticker]! += doubleNumShares
                     
-                    userData.netWorth -= cost
+                    userData.netWorth -= Double(cost)
                     
                     transactionMade = true
                     let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
@@ -110,13 +110,13 @@ struct TradeSheet: View {
                 
                 
                 Button(action: {
-                    let doubleNumShares = Double(numShares) ?? 0.0
-                    let cost = Double(stock.lastPrice) * doubleNumShares
+                    let doubleNumShares = Float(numShares) ?? 0.0
+                    let cost = Float(stock.lastPrice) * doubleNumShares
                     
 //                    let stock_info = ["purchasedlastPrice": stock.lastPrice, "quantity": Float(self.numShares) ?? 0.0]
                     
 //                    var retrieved_stock = userData.purchasedStocks[stock.ticker]
-                    userData.netWorth += cost
+                    userData.netWorth += Double(cost)
                     userData.purchasedStocks[stock.ticker]! -= doubleNumShares
                     
 //                    userData.netWorth += cost
@@ -149,7 +149,7 @@ struct TradeSheet: View {
 struct TradeSheet_Previews: PreviewProvider {
     static var previews: some View {
         let userData = UserData()
-        let stock = userData.stocks[0]
+        let stock = stockData[0]
         TradeSheet(isPresented: .constant(true), stock: stock).environmentObject(userData)
     }
     

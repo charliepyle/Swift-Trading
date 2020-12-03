@@ -10,9 +10,12 @@ import SwiftUI
 
 final class UserData: ObservableObject {
     @Published var netWorth = 20000.00
-    @Published var stocks = stockData
-    @Published var favorites:[Stock] = []
-    @Published var purchasedStocks: [String:Double] = [:]
+//    @Published var stocks = stockData
+    @Published var favorites:[String] = ["msft", "nvda"]
+//    @Published var purchasedStocks: [PurchasedStock] = [PurchasedStock(id: "aapl", numShares: 1), PurchasedStock(id: "tsla", numShares: 1)]
+    @Published var purchasedStocks: [String:Float] = ["aapl": 1,
+                                                       "tsla": 1]
+    @Published var purchasedStocksStrings: [String] = ["aapl", "tsla"]
     @Published var shares = 10
 }
 

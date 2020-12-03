@@ -11,27 +11,55 @@ import SwiftUI
 class StockFetchModel: ObservableObject {
     var stockString: String = ""
     
+    
     @Published var stock: Stock?
+    @Published var stockRow: StockRowModel?
     @Published var dataReceived = false
     
     
     func updateStock(stockString: String) {
-        guard let url = URL(string: "https://hw8-usc.wl.r.appspot.com/api/details/\(stockString)")
+       
+        guard let url = URL(string: "https://hw8-usc.wl.r.appspot.com/api/nonewsdetails/\(stockString)")
         else {
             print("Bad URL")
             return
         }
         
         let request = URLRequest(url: url)
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
-                    if let data = data {
+            if let data = data {
                         
                         print(data)
                         if let response = try? JSONDecoder().decode(Stock.self, from: data) {
                             print(response)
                             DispatchQueue.main.async {
                                 self.stock = response
+                                self.dataReceived = true
+                            }
+                            return
+                        }
+                    }
+                }.resume()
+        
+    }
+    
+    func updateStockRow(stockString: String) {
+        
+        guard let url = URL(string: "https://hw8-usc.wl.r.appspot.com/api/tickers/\(stockString)")
+        else {
+            print("Bad URL")
+            return
+        }
+        
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                        
+                        print(data)
+                        if let response = try? JSONDecoder().decode(StockRowModel.self, from: data) {
+                            print(response)
+                            DispatchQueue.main.async {
+                                self.stockRow = response
                                 self.dataReceived = true
                             }
                             return
