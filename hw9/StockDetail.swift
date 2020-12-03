@@ -12,6 +12,9 @@ struct StockDetail: View {
     @ObservedObject var stockFetchModel = StockFetchModel()
     @State private var showMore = false
     @State var showingTrade = false
+    @State var changedFavorite: Bool = false
+//    @State var removedFavorite: Bool = false
+    @State var transactionString: String = ""
     @Environment(\.openURL) var openURL
     @State var stock: Stock = stockData[0]
     
@@ -236,7 +239,7 @@ struct StockDetail: View {
                                         Label("Open in Safari", systemImage: "safari")
                                     }
                                     Button(action: {
-                                        let shareString = "Check out this link:".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                        let shareString = "Check out this link:"
                                         let twitterURL = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                                         let hashtags = "CSCI571StockApp".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                                         let stringToOpen = "https://twitter.com/intent/tweet?text=\(shareString)&url=\(twitterURL)&hashtags=\(hashtags)"
@@ -260,10 +263,22 @@ struct StockDetail: View {
                             Button(action: {
                                 if let index = userData.favorites.firstIndex(of: stockFetchModel.stock!.ticker) {
                                     userData.favorites.remove(at: index)
+                                    userData.updateStockRowFavorites()
                                 }
-//                                userData.favorites.remove(at: stockFetchModel.stock!.ticker)
+                                
+                                changedFavorite = true
+                                
+                                self.transactionString = "Removing \(stockFetchModel.stock!.ticker) from favorites"
+//                                self.removedFavorite = true
+                                
+                                
                                 let defaults = UserDefaults.standard
                                 defaults.set(userData.favorites, forKey: "favorites")
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    changedFavorite = false
+                                  }
+                                }
                             }) {
                                     Image(systemName: "plus.circle.fill")
                             }
@@ -271,8 +286,21 @@ struct StockDetail: View {
                         else {
                             Button(action: {
                                 userData.favorites.append(stockFetchModel.stock!.ticker)
+                                
+                                changedFavorite = true
+                                self.transactionString = "Adding \(stockFetchModel.stock!.ticker) to favorites"
+//                                self.addedFavorite = true
+                                
                                 let defaults = UserDefaults.standard
                                 defaults.set(userData.favorites, forKey: "favorites")
+                                userData.updateStockRowFavorites()
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    changedFavorite = false
+                                  }
+                                }
+                                
                             }) {
                                 Image(systemName: "plus.circle")
                             }
@@ -285,7 +313,10 @@ struct StockDetail: View {
                     Spacer()
 
                 }
-            }
+//                .toast(isShowing: Constant.false, text: Text(transactionString), successToast: true)
+                
+//                .toast(isShowing: $removedFavorite, text: Text(transactionString), successToast: false)
+            }.toast(isShowing: $changedFavorite, text: Text(transactionString), successToast: false)
         }
             
         
@@ -315,3 +346,4 @@ struct StockDetail_Previews: PreviewProvider {
             .environmentObject(userData)
     }
 }
+

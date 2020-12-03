@@ -11,8 +11,8 @@ import KingfisherSwiftUI
 struct NewsRow: View {
     var news: News
     var columns: [GridItem] = [
-        GridItem(.fixed(200), alignment: .leading),
-        GridItem(.fixed(100), alignment: .leading)
+        GridItem(.fixed(240), alignment: .leading),
+        GridItem(.fixed(60), alignment: .leading)
     ]
     
     var body: some View {
@@ -41,13 +41,20 @@ struct NewsRow: View {
 //
             VStack(spacing:0) {
                 let url = URL(string:news.urlToImage)
+//                GeometryReader {
                 KFImage(url)
                     .resizable()
-                    .aspectRatio(1, contentMode: .fit)
+                    .aspectRatio(1, contentMode: .fill)
+//                    .scaledToFill()
+//                    .frame(minHeight: 0, maxHeight: .infinity)
+//                    .clipped()
+                    .frame(minWidth: 0, maxWidth: .infinity)
+//                    .aspectRatio(1, contentMode: .fit)
                     .cornerRadius(20)
-                    .frame(minHeight: 0, maxHeight: .infinity)
-            }
-        }.padding()
+//                }
+                   
+            }.clipped()
+        }//.padding()
             
             
 //        }

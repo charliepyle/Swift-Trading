@@ -12,9 +12,9 @@ struct TradeSheet: View {
     @EnvironmentObject var userData: UserData
 //    @State var numShares: String? = "0"
     @State var numShares: String = "0"
-//    var onDismiss: () -> ()
     @Binding var isPresented: Bool
     @State var transactionMade: Bool = false
+    @State var transactionError: Bool = false
     @State var transactionString: String = ""
     
     var stock: Stock
@@ -33,15 +33,17 @@ struct TradeSheet: View {
                 
                 
             }
+
             Text("Trade \(stock.companyName) shares")
-                .font(.subheadline)
-                .fontWeight(.bold)
+                .padding()
+                .foregroundColor(.black)
             
             Spacer()
-            
+
             HStack {
                 TextField("", text: self.$numShares)
                     .padding()
+                    .foregroundColor(.black)
                     .keyboardType(.numberPad)
                     .onReceive(Just(numShares)) { newValue in
                                     var filtered = newValue.filter { "0123456789".contains($0) }
@@ -52,22 +54,23 @@ struct TradeSheet: View {
                                             filtered = String(filtered.dropLast())
                                         }
                                         self.numShares = filtered
-                                        
+
                                     }
                     }
                     .font(Font.system(size: 120, design: .default))
-                
+
                 VStack {
                     let share = Int(numShares) ?? 0 == 1 ? "Share" : "Shares"
                     Text(share)
                         .padding([.top, .trailing])
+                        .foregroundColor(.black)
                         .font(.largeTitle)
                 }
-                  
+
             }
-                
+
             HStack {
-                
+
                 Spacer()
                 Group {
                     let floatShares = Float(self.numShares) ?? 0.0
@@ -75,10 +78,13 @@ struct TradeSheet: View {
                     Text("x \(stock.lastPrice, specifier: "%.2f")/share = $\(multipliedValue, specifier: "%.2f")")
                 }
                 .padding(.trailing)
-                
+                .foregroundColor(.black)
+
             }
-            
+
             Spacer()
+            
+            
             let defaults = UserDefaults.standard
             let cash = defaults.float(forKey: "cash")
             Text("$\(cash, specifier: "%.2f") available to buy \(stock.ticker)")
@@ -88,40 +94,88 @@ struct TradeSheet: View {
             
             HStack {
                 Button(action: {
-                    let doubleNumShares = Float(numShares) ?? 0.0
-                    let cost = Float(stock.lastPrice) * doubleNumShares
                     
-//                    let checkArray = fetch(key: stock.ticker)
-//
-//
-                    let defaults = UserDefaults.standard
-                    userData.purchasedStocks = fetch(key: "purchasedStocks")!
-                    
-                    if (userData.purchasedStocks[stock.ticker] == nil) {
-                        userData.purchasedStocks[stock.ticker] = doubleNumShares
-                        userData.stockRows.append(StockRowModel(ticker: stock.ticker, companyName: stock.companyName, lastPrice: stock.lastPrice, change: stock.change))
+                    if (Float(numShares) == nil) {
+                        transactionError = true
+                        transactionString = "Please enter a valid amount."
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                          withAnimation {
+                            transactionError = false
+                          }
+                        }
                     }
+                    
                     else {
-                        userData.purchasedStocks[stock.ticker]! += doubleNumShares
-                    }
-                    
-                    var cash = defaults.float(forKey: "cash")
-                    cash -= Float(cost)
-                    
+                        let doubleNumShares = Float(numShares) ?? 0.0
+                        
+                        if (doubleNumShares <= 0) {
+                            transactionError = true
+                            transactionString = "Cannot buy less than 0 shares."
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                              withAnimation {
+                                transactionError = false
+                              }
+                            }
+                        }
+                        else {
+                            let cost = Float(stock.lastPrice) * doubleNumShares
+                            
+                            let defaults = UserDefaults.standard
+                            var cash = defaults.float(forKey: "cash")
+                            
+                            if (cost > cash) {
+                                transactionError = true
+                                transactionString = "Not enough money to buy."
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    transactionError = false
+                                  }
+                                }
+                            }
+                            
+                            else {
+                                userData.purchasedStocks = fetch(key: "purchasedStocks")!
+                                
+                                if (userData.purchasedStocks[stock.ticker] == nil) {
+                                    userData.purchasedStocks[stock.ticker] = doubleNumShares
+                                    userData.purchasedStocksStrings.append(stock.ticker)
+                                    userData.updateStockRows()
+                                }
+                                else {
+                                    userData.purchasedStocks[stock.ticker]! += doubleNumShares
+                                }
+                                
+    //                            var cash = defaults.float(forKey: "cash")
+                                cash -= Float(cost)
+                                
+                                userData.cash = cash
+                                defaults.set(cash, forKey: "cash")
+                                
+                                defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
+                                
+                                store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                                
+                                
+                                transactionMade = true
+                                let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
+                                transactionString = "You have successfully bought \(numShares) \(share) of \(stock.ticker)"
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    transactionMade = false
+                                    isPresented = false
+                                  }
+                                }
+                            }
 
-                    defaults.set(cash, forKey: "cash")
-                    
-                    if !userData.purchasedStocksStrings.contains(stock.ticker) {
-                        userData.purchasedStocksStrings.append(stock.ticker)
+                        }
                     }
-                    defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
-                    
-                    store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
                     
                     
-                    transactionMade = true
-                    let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
-                    transactionString = "You have successfully bought \(numShares) \(share) of \(stock.ticker)"
+                          
                 }) {
                     Text("Buy")
                 }
@@ -133,42 +187,93 @@ struct TradeSheet: View {
                 
                 
                 Button(action: {
-                    let doubleNumShares = Float(numShares) ?? 0.0
-                    let cost = Float(stock.lastPrice) * doubleNumShares
                     
-                    let defaults = UserDefaults.standard
-                    
-                    userData.purchasedStocks = fetch(key: "purchasedStocks")!
-                    
-                    userData.purchasedStocks[stock.ticker]! -= doubleNumShares
-                    
-                    
-
-                    var cash = defaults.float(forKey: "cash")
-                    cash += Float(cost)
-                    
-
-                    defaults.set(cash, forKey: "cash")
-                    print(userData.purchasedStocks[stock.ticker]!)
-                    if Int(userData.purchasedStocks[stock.ticker]!) == 0 {
-                        if let index = userData.purchasedStocksStrings.firstIndex(of: stock.ticker) {
-                            userData.purchasedStocksStrings.remove(at: index)
+                    if (Float(numShares) == nil) {
+                        transactionError = true
+                        transactionString = "Please enter a valid amount."
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                          withAnimation {
+                            transactionError = false
+                          }
                         }
-                        
-                        defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
-                        
-                        userData.purchasedStocks.removeValue(forKey: stock.ticker)
-                        
-                        store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
                     }
+                    
                     else {
-                        store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                        let doubleNumShares = Float(numShares) ?? 0.0
+                        
+                        if (doubleNumShares <= 0) {
+                            transactionError = true
+                            transactionString = "Cannot sell less than 0 shares."
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                              withAnimation {
+                                transactionError = false
+                              }
+                            }
+                        }
+                        else {
+                            let cost = Float(stock.lastPrice) * doubleNumShares
+                            
+                            let defaults = UserDefaults.standard
+                            
+                            userData.purchasedStocks = fetch(key: "purchasedStocks")!
+                            
+                            let originalStocks = userData.purchasedStocks[stock.ticker]!
+                            
+                            if (doubleNumShares > originalStocks) {
+                                transactionError = true
+                                transactionString = "Not enough shares to sell."
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    transactionError = false
+                                  }
+                                }
+                            }
+                            
+                            else {
+                                userData.purchasedStocks[stock.ticker]! -= doubleNumShares
+                                
+                                
+
+                                if Int(userData.purchasedStocks[stock.ticker]!) == 0 {
+                                    if let index = userData.purchasedStocksStrings.firstIndex(of: stock.ticker) {
+                                        userData.purchasedStocksStrings.remove(at: index)
+                                    }
+                                    
+                                    defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
+                                    
+                                    userData.purchasedStocks.removeValue(forKey: stock.ticker)
+                                    
+                                    store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                                    
+                                    userData.updateStockRows()
+                                }
+                                else {
+                                    store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                                }
+                                
+                                var cash = defaults.float(forKey: "cash")
+                                cash += Float(cost)
+                                
+
+                                defaults.set(cash, forKey: "cash")
+                                
+                                
+                                transactionMade = true
+                                let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
+                                transactionString = "You have successfully sold \(numShares) \(share) of \(stock.ticker)"
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                  withAnimation {
+                                    isPresented = false
+                                    transactionMade = false
+                                  }
+                                }
+                            }
+                        }
                     }
-                    
-                    
-                    transactionMade = true
-                    let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
-                    transactionString = "You have successfully sold \(numShares) \(share) of \(stock.ticker)"
                 }) {
                     Text("Sell")
                 }
@@ -178,15 +283,10 @@ struct TradeSheet: View {
                 .font(.headline).cornerRadius(40)
                 .frame(maxWidth: .infinity, alignment: .center)
             }
-            
-                
-                
-            
-            
-            Spacer()
                 
         }
-        .toast(isShowing: $transactionMade, text: Text(transactionString))
+        .toast(isShowing: $transactionMade, text: Text(transactionString), successToast: true)
+        .toast(isShowing: $transactionError, text: Text(transactionString), successToast: false)
     }
     
     func store(dictionary: [String: Float], key: String) {
@@ -237,59 +337,87 @@ struct Toast<Presenting>: View where Presenting: View {
     let presenting: () -> Presenting
     /// The text to show
     let text: Text
+    
+    let successToast: Bool
 
     var body: some View {
 
-        GeometryReader { geometry in
+        if (successToast) {
+//            GeometryReader { geometry in
 
-            ZStack(alignment: .center) {
+                ZStack(alignment: .center) {
 
-                self.presenting()
-                    .blur(radius: self.isShowing ? 1 : 0)
+                    self.presenting()
+//                        .blur(radius: self.isShowing ? 1 : 0)
 
-                VStack {
-                    Text("Congratulations!")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding([.top, .leading, .trailing])
+                    VStack {
+                        Text("Congratulations!")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .padding([.top, .leading, .trailing])
+                            
+                        self.text
+                            .font(.footnote)
+                            .padding(.top)
                         
-                    self.text
-                        .font(.footnote)
-                        .padding(.top)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        isShowing = false
-                    }) {
-                        Text("Done")
+                        Spacer()
+                        
+                        Button(action: {
+                            isShowing = false
+                        }) {
+                            Text("Done")
+                        }
+                        .padding(EdgeInsets(top: 15, leading: 120, bottom: 15, trailing: 120))
+                        .background(Color.white)
+                        .foregroundColor(.green)
+                        .font(.headline)
+                        .cornerRadius(40)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .padding(EdgeInsets(top: 15, leading: 120, bottom: 15, trailing: 120))
-                    .background(Color.white)
-                    .foregroundColor(.green)
-                    .font(.headline)
-                    .cornerRadius(40)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                .frame(width: geometry.size.width / 2,
-//                       height: geometry.size.height / 5)
-                .background(Color.green)
-                .foregroundColor(Color.white)
-//                .cornerRadius(20)
-                .transition(.slide)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                      withAnimation {
-                        self.isShowing = false
-                      }
-                    }
-                }
-                .opacity(self.isShowing ? 1 : 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.green)
+                    .foregroundColor(Color.white)
+                    .transition(.slide)
+                    .opacity(self.isShowing ? 1 : 0)
+                    
 
-            }
+                }
 
+//            }
         }
+       
+        else {
+//            GeometryReader { geometry in
+
+                ZStack(alignment: .center) {
+//
+                    self.presenting()
+//                        .blur(radius: self.isShowing ? 1 : 0)
+
+                    VStack {
+                        Spacer()
+                        
+                        self.text
+                            .font(.footnote)
+                            .padding(EdgeInsets(top: 15, leading: 120, bottom: 15, trailing: 120))
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .cornerRadius(40)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .transition(.slide)
+
+                    .opacity(self.isShowing ? 1 : 0)
+
+                }
+        }
+        
+        
+        
+        
+        
 
     }
 
@@ -297,10 +425,12 @@ struct Toast<Presenting>: View where Presenting: View {
 
 extension View {
 
-    func toast(isShowing: Binding<Bool>, text: Text) -> some View {
+    func toast(isShowing: Binding<Bool>, text: Text, successToast: Bool) -> some View {
         Toast(isShowing: isShowing,
               presenting: { self },
-              text: text)
+              text: text,
+              successToast: successToast)
     }
 
 }
+

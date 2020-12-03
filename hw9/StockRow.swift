@@ -8,30 +8,27 @@
 import SwiftUI
 
 struct StockRow: View {
-    var stockString: String
+//    var stockString: String
     var numShares: Float
-    var lastPrice: Float?
-    var change: String?
+//    var lastPrice: Float?
+//    var change: String?
+    var stockRowModel: StockRowModel
     @ObservedObject var stockFetchModel = StockFetchModel()
     @EnvironmentObject var userData: UserData
     
-    init(stockString: String, numShares: Float) {
-        self.stockString = stockString
-        self.numShares = numShares
-        stockFetchModel.updateStockRow(stockString: stockString)
-    }
     
-    init(stockString: String, numShares: Float, lastPrice: Float, change: String) {
-        self.stockString = stockString
+    init(stockRowModel: StockRowModel, numShares: Float) {
+        self.stockRowModel = stockRowModel
+//        self.stockString = stockRowModel.ticker
         self.numShares = numShares
-        self.lastPrice = lastPrice
-        self.change = change
-        stockFetchModel.dataReceived = true
+//        self.lastPrice = lastPrice
+//        self.change = change
+//        stockFetchModel.dataReceived = true
 //        stockFetchModel.updateStockRow(stockString: stockString)
     }
     
     var body: some View {
-        if (!stockFetchModel.dataReceived) {
+        if (!userData.dataReceived) {
             ProgressView()
             Text("Fetching Data...")
                 .font(.footnote)
@@ -42,19 +39,19 @@ struct StockRow: View {
 
                 VStack(spacing:0) {
 //                    Text(stockFetchModel.stockRow!.ticker)
-                    Text(self.stockString)
+                    Text(self.stockRowModel.ticker)
                         .font(.title3)
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
     //                if (stock.shares.isZero) {
                     if (numShares == 0) {
-                        Text(stockFetchModel.stockRow!.companyName)
+                        Text(self.stockRowModel.companyName)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.subheadline)
                             .foregroundColor(Color.gray)
                     }
                     else {
-                        Text("\(numShares, specifier: "%.2f") shares")
+                        Text("\(self.numShares, specifier: "%.2f") shares")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.subheadline)
                             .foregroundColor(Color.gray)
@@ -65,35 +62,35 @@ struct StockRow: View {
                 Spacer()
                 
                 VStack(spacing:0) {
-                    let lastPrice = (self.lastPrice == nil ? stockFetchModel.stockRow!.lastPrice! : self.lastPrice)
-                    let change = (self.change == nil ? stockFetchModel.stockRow!.change : self.change)
-                    Text("\(lastPrice!, specifier: "%.2f")")
+//                    let lastPrice = (self.lastPrice == nil ? stockFetchModel.stockRow!.lastPrice! : self.lastPrice)
+//                    let change = (self.change == nil ? stockFetchModel.stockRow!.change : self.change)
+                    Text("\(self.stockRowModel.lastPrice!, specifier: "%.2f")")
                         .fontWeight(.bold)
                         .font(.subheadline)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         
                     HStack {
-                        if (Float(change!)! < 0) {
+                        if (Float(self.stockRowModel.change)! < 0) {
                             Image(systemName: "arrow.down.right")
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                             .foregroundColor(Color.red)
                         }
-                        if (Float(change!)! > 0) {
+                        if (Float(self.stockRowModel.change)! > 0) {
                             Image(systemName: "arrow.up.right")
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .foregroundColor(Color.green)
                         }
                         
-                        Text("\(Float(change!)!, specifier: "%.2f")")
+                        Text("\(Float(self.stockRowModel.change)!, specifier: "%.2f")")
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .font(.subheadline)
-                            .if(Float(change!)! < 0) {
+                            .if(Float(self.stockRowModel.change)! < 0) {
                                 $0.foregroundColor(Color.red)
                             }
-                            .if(Float(change!)! == 0) {
+                            .if(Float(self.stockRowModel.change)! == 0) {
                                 $0.foregroundColor(Color.black)
                             }
-                            .if(Float(change!)! > 0) {
+                            .if(Float(self.stockRowModel.change)! > 0) {
                                 $0.foregroundColor(Color.green)
                             }
                     }
@@ -125,8 +122,9 @@ extension View {
 
 struct StockRow_Previews: PreviewProvider {
     static var previews: some View {
+        let userData = UserData()
         Group {
-            StockRow(stockString: stockData[0].ticker, numShares: 0)
+            StockRow(stockRowModel: userData.stockRows[0], numShares: 0)
         }
         .previewLayout(.fixed(width: 300, height: 70))
     }

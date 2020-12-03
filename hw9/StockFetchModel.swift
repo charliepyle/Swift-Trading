@@ -71,7 +71,6 @@ class StockFetchModel: ObservableObject {
             print("Bad URL")
             return
         }
-        let defaults = UserDefaults.standard
         let request = URLRequest(url: url)
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {

@@ -51,7 +51,7 @@ struct StockList: View {
                                     let numShares: Float = userData.purchasedStocks[stock.ticker]!
                                     NavigationLink(
                                         destination: StockDetail(stockString: stock.ticker)) {
-                                        StockRow(stockString: stock.ticker, numShares: numShares, lastPrice: stock.lastPrice!, change: stock.change).environmentObject(userData)
+                                        StockRow(stockRowModel: stock, numShares: numShares).environmentObject(userData)
                                     }
                                 }
                                 
@@ -61,18 +61,17 @@ struct StockList: View {
                         }
 
                         Section(header: Text("Favorites")) {
-                            let defaults = UserDefaults.standard
-                            let favorites = defaults.stringArray(forKey: "favorites") ?? [String]()
+//                            let favorites = defaults.stringArray(forKey: "favorites") ?? [String]()
                             
                             ForEach(
 //                                userData.favorites, id: \.self
-                                favorites, id: \.self
+                                userData.stockRowFavorites, id: \.self
                             ) { stock in
-                                let numShares: Float = (userData.purchasedStocks[stock] == nil ? 0.0 : userData.purchasedStocks[stock])!
+                                let numShares: Float = (userData.purchasedStocks[stock.ticker] == nil ? 0.0 : userData.purchasedStocks[stock.ticker])!
 
                                 NavigationLink(
-                                destination: StockDetail(stockString: stock).environmentObject(userData)) {
-                                    StockRow(stockString: stock, numShares: numShares).environmentObject(userData)
+                                    destination: StockDetail(stockString: stock.ticker).environmentObject(userData)) {
+                                    StockRow(stockRowModel: stock, numShares: numShares).environmentObject(userData)
 
                                 }
                             }
@@ -123,30 +122,15 @@ struct StockList: View {
                 userData.purchasedStocks = purchasedDictionary!
             }
             
-            var queryString = ""
+
+            userData.cash = defaults.float(forKey: "cash")
             
-            for string in userData.purchasedStocksStrings {
-                let stringToAdd = string.uppercased() + ","
-                queryString += stringToAdd
-            }
-            
-            stockFetchModel.updateStockRows(stockString: queryString)
+            userData.updateStockRows()
             
             userData.stockRows = stockFetchModel.stockRows
             
-            var netWorth = defaults.float(forKey: "cash")
-            
-            for stockRow in stockFetchModel.stockRows {
-                netWorth += Float(Double((stockRow.lastPrice! * userData.purchasedStocks[stockRow.ticker]!)))
-            }
-            
-//            defaults.set(netWorth, forKey: "netWorth")
-            
-//            userData.netWorth = netWorth
-//            defaults.set(userData.netWorth, forKey: "netWorth")
-            
-            
-            
+            userData.updateStockRowFavorites()
+               
             
         }
         
@@ -182,7 +166,8 @@ struct StockList: View {
         withAnimation {
 //            var stocks:[String] = userData.purchasedStocksStrings
             userData.purchasedStocksStrings.move(fromOffsets: source, toOffset: destination)
-            stockFetchModel.stockRows.move(fromOffsets: source, toOffset: destination)
+            userData.stockRows.move(fromOffsets: source, toOffset: destination)
+//            stockFetchModel.stockRows.move(fromOffsets: source, toOffset: destination)
             let defaults = UserDefaults.standard
             defaults.set(userData.purchasedStocksStrings, forKey: "purchasedStrings")
         }
@@ -192,6 +177,7 @@ struct StockList: View {
     func moveFavoriteStocks(from source: IndexSet, to destination: Int) {
         withAnimation {
             userData.favorites.move(fromOffsets: source, toOffset: destination)
+            userData.stockRowFavorites.move(fromOffsets: source, toOffset: destination)
             let defaults = UserDefaults.standard
             defaults.set(userData.favorites, forKey: "favorites")
         }
@@ -200,6 +186,7 @@ struct StockList: View {
     func deleteFavoriteStocks(offsets: IndexSet) {
         withAnimation {
             userData.favorites.remove(atOffsets: offsets)
+            userData.stockRowFavorites.remove(atOffsets: offsets)
             let defaults = UserDefaults.standard
             defaults.set(userData.favorites, forKey: "favorites")
         }
