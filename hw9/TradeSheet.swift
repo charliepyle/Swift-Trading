@@ -80,7 +80,7 @@ struct TradeSheet: View {
             
             Spacer()
             
-            Text("$\(userData.netWorth, specifier: "%.2f") available to buy \(stock.ticker)")
+            Text("$\(userData.cash, specifier: "%.2f") available to buy \(stock.ticker)")
                 .font(.footnote)
                 .padding()
                 .foregroundColor(.gray)
@@ -90,11 +90,32 @@ struct TradeSheet: View {
                     let doubleNumShares = Float(numShares) ?? 0.0
                     let cost = Float(stock.lastPrice) * doubleNumShares
                     
+//                    let checkArray = fetch(key: stock.ticker)
+//
+//
+                    let defaults = UserDefaults.standard
+                    userData.purchasedStocks = fetch(key: "purchasedStocks")!
                     
-                
-                    userData.purchasedStocks[stock.ticker]! += doubleNumShares
+                    if (userData.purchasedStocks[stock.ticker] == nil) {
+                        userData.purchasedStocks[stock.ticker] = doubleNumShares
+                    }
+                    else {
+                        userData.purchasedStocks[stock.ticker]! += doubleNumShares
+                    }
+                    userData.cash -= Double(cost)
                     
-                    userData.netWorth -= Double(cost)
+
+                    defaults.set(userData.cash, forKey: "cash")
+                    
+                    var stockStrings:[String] = userData.purchasedStocksStrings
+                    
+                    if !stockStrings.contains(stock.ticker) {
+                        stockStrings.append(stock.ticker)
+                    }
+                    defaults.set(stockStrings, forKey: "purchasedStrings")
+                    
+                    store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                    
                     
                     transactionMade = true
                     let share = Int(numShares) ?? 0 == 1 ? "share" : "shares"
@@ -113,11 +134,31 @@ struct TradeSheet: View {
                     let doubleNumShares = Float(numShares) ?? 0.0
                     let cost = Float(stock.lastPrice) * doubleNumShares
                     
-//                    let stock_info = ["purchasedlastPrice": stock.lastPrice, "quantity": Float(self.numShares) ?? 0.0]
-                    
-//                    var retrieved_stock = userData.purchasedStocks[stock.ticker]
-                    userData.netWorth += Double(cost)
+                    let defaults = UserDefaults.standard
+                    userData.purchasedStocks = fetch(key: "purchasedStocks")!
+
+                    userData.cash += Double(cost)
                     userData.purchasedStocks[stock.ticker]! -= doubleNumShares
+                    
+                    
+                    defaults.set(userData.cash, forKey: "cash")
+                    
+                    var stockStrings:[String] = userData.purchasedStocksStrings
+                    if Int(numShares) == 0 {
+                        if let index = userData.purchasedStocksStrings.firstIndex(of: stock.ticker) {
+                            stockStrings.remove(at: index)
+                        }
+                        
+                        defaults.set(stockStrings, forKey: "purchasedStrings")
+                        
+                        userData.purchasedStocks.removeValue(forKey: stock.ticker)
+                        
+                        store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                    }
+                    else {
+                        store(dictionary: userData.purchasedStocks, key: "purchasedStocks")
+                    }
+                    
                     
 //                    userData.netWorth += cost
                     
@@ -144,6 +185,32 @@ struct TradeSheet: View {
         .toast(isShowing: $transactionMade, text: Text(transactionString))
     }
     
+    func store(dictionary: [String: Float], key: String) {
+        var data: Data?
+        let encoder = JSONEncoder()
+        do {
+            data = try encoder.encode(dictionary)
+        } catch {
+            print("failed to get data")
+        }
+        UserDefaults.standard.set(data, forKey: key)
+    }
+
+    func fetch(key: String) -> [String: Float]? {
+        let decoder = JSONDecoder()
+        do {
+            
+            if let storedData = UserDefaults.standard.data(forKey: key) {
+                let newArray = try decoder.decode([String: Float].self, from: storedData)
+                print("new array: \(newArray)")
+                return newArray
+            }
+        } catch {
+            print("couldn't decode array: \(error)")
+        }
+        return nil
+    }
+    
 }
 
 struct TradeSheet_Previews: PreviewProvider {
@@ -154,6 +221,8 @@ struct TradeSheet_Previews: PreviewProvider {
     }
     
 }
+
+
 
 
 struct Toast<Presenting>: View where Presenting: View {

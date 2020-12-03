@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "768D3173-09EE-4CC2-A86C-0B4DF0F6A70E"
-            shouldBeEnabled = "Yes"
+            uuid = "4B4B1F53-1351-4431-BB22-7A7356EA305C"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "hw9/StockFetchModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "updateStock(stockString:)"
             landmarkType = "7">
          </BreakpointContent>

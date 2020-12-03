@@ -35,11 +35,6 @@ struct StockDetail: View {
         else {
             ScrollView(.vertical) {
                 VStack {
-                    Text(stockFetchModel.stock!.ticker)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading)
                     Text(stockFetchModel.stock!.companyName)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
@@ -73,8 +68,15 @@ struct StockDetail: View {
 
                     HStack {
 //                        if (userData.purchasedStocks[stock.ticker] == 0) {
-                        let hasStock = userData.purchasedStocks[stock.ticker]
-                        if (hasStock == nil || hasStock == 0) {
+//                        let hasStock = userData.purchasedStocks[stock.ticker]
+                        let dictionary = fetch(key: "purchasedStocks")
+                        let hasStock = ((dictionary == nil || dictionary![stock.ticker] == 0) ? 0 : dictionary![stock.ticker])
+//                        if dictionary != nil {
+//                            hasStock = dictionary[stock.ticker]
+//                        }
+                       
+                        let netWorth = (hasStock == nil ? 0 : hasStock! * stockFetchModel.stock!.lastPrice)
+                        if (dictionary == nil || hasStock == 0) {
                             VStack {
                                 Text("You have 0 shares of \(stockFetchModel.stock!.ticker).")
                                     .font(.footnote)
@@ -90,12 +92,12 @@ struct StockDetail: View {
 
                         else {
                             VStack {
-                                Text("Shares Owned: \(userData.shares, specifier: "%.4f")")
+                                Text("Shares Owned: \(hasStock!, specifier: "%.4f")")
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.leading)
 
-                                Text("Market Value: \(stockFetchModel.stock!.lastPrice, specifier: "%.2f")")
+                                Text("Market Value: \(netWorth, specifier: "%.2f")")
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.leading)
@@ -157,7 +159,7 @@ struct StockDetail: View {
                                     .font(.caption2)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Text("Bid Price: \(stockFetchModel.stock!.bidPrice, specifier: "%.2f")")
+                                Text("Bid Price: \(stockFetchModel.stock!.bidPrice ?? 0, specifier: "%.2f")")
                                     .font(.caption2)
                                     .padding(.leading)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -251,14 +253,43 @@ struct StockDetail: View {
                     }
 
                     .toolbar {
-                        Button(action: {
-                            userData.favorites.append(stockFetchModel.stock!.ticker)
-                        }) {
-                            Image(systemName: "plus.circle")
+                        if userData.favorites.contains(stockFetchModel.stock!.ticker) {
+                            Button(action: {
+                                if let index = userData.favorites.firstIndex(of: stockFetchModel.stock!.ticker) {
+                                    userData.favorites.remove(at: index)
+                                }
+//                                userData.favorites.remove(at: stockFetchModel.stock!.ticker)
+                                let defaults = UserDefaults.standard
+                                defaults.set(userData.favorites, forKey: "favorites")
+                            }) {
+                                    Image(systemName: "plus.circle.fill")
+                            }
                         }
+                        else {
+                            Button(action: {
+                                userData.favorites.append(stockFetchModel.stock!.ticker)
+                                let defaults = UserDefaults.standard
+                                defaults.set(userData.favorites, forKey: "favorites")
+                            }) {
+                                Image(systemName: "plus.circle")
+                            }
+                        }
+//                        Button(action: {
+//                            userData.favorites.append(stockFetchModel.stock!.ticker)
+//                            let defaults = UserDefaults.standard
+//                            defaults.set(userData.favorites, forKey: "favorites")
+//                        }) {
+//                            if userData.favorites.contains(stockFetchModel.stock!.ticker) {
+//                                Image(systemName: "plus.circle.fill")
+//                            }
+//                            else {
+//                                Image(systemName: "plus.circle")
+//                            }
+//
+//                        }
                     }
 
-
+                    .navigationBarTitle(Text(stockFetchModel.stock!.ticker))
 
 
                     Spacer()
@@ -269,6 +300,21 @@ struct StockDetail: View {
             
         
         
+    }
+    
+    func fetch(key: String) -> [String: Float]? {
+        let decoder = JSONDecoder()
+        do {
+            
+            if let storedData = UserDefaults.standard.data(forKey: key) {
+                let newArray = try decoder.decode([String: Float].self, from: storedData)
+                print("new array: \(newArray)")
+                return newArray
+            }
+        } catch {
+            print("couldn't decode array: \(error)")
+        }
+        return nil
     }
 }
 

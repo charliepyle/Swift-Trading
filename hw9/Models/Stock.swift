@@ -19,10 +19,10 @@ struct Stock: Hashable, Codable {
     var closePrice: Float
     var volume: Float
     var midPrice: Float?
-    var askPrice: Float
-    var askSize: Float
-    var bidPrice: Float
-    var bidSize: Float
+    var askPrice: Float?
+    var askSize: Float?
+    var bidPrice: Float?
+    var bidSize: Float?
     var news:[News] = []
 //    var historicalStockClose:[HistoricalPrice] = []
     var historicalStockClose:[[Float]] = [[]]
