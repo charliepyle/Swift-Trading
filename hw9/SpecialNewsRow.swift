@@ -8,13 +8,13 @@
 import SwiftUI
 import KingfisherSwiftUI
 
-struct NewsRow: View {
+struct SpecialNewsRow: View {
     var news: News
     var publishedDate: String = ""
-    var columns: [GridItem] = [
-        GridItem(.fixed(240), alignment: .leading),
-        GridItem(.fixed(60), alignment: .leading)
-    ]
+//    var rows: [GridItem] = [
+//        GridItem(.fixed(240)),
+//        GridItem(.fixed(60))
+//    ]
     
     init(news: News) {
         self.news = news
@@ -57,60 +57,74 @@ struct NewsRow: View {
     
     var body: some View {
 
-        LazyVGrid(columns: columns) {
-            VStack(spacing:0) {
-                HStack {
-                    Text(news.source)
-                        .font(.footnote)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color.gray)
-                    Text(self.publishedDate)
-                        .font(.footnote)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color.gray)
-                }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom)
-                Text(news.title)
-                    .font(.footnote)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .lineLimit(3)
-//                Spacer()
-            }
+////        LazyHGrid(rows: rows) {
+//        RoundedRectangle {
 //
-            VStack(spacing:0) {
-//                let url = URL(string:news.urlToImage)
-                
-                GeometryReader { geo in
-                    KFImage(URL(string:news.urlToImage))
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fill)
-                        .cornerRadius(20)
-                        
-                        
-                        
-    //                    .frame(minHeight: 0, maxHeight: .infinity)
-    //                    .clipped()
-                        .frame(width: geo.size.width, height:60)
-//                        .scaledToFill()
+//        }
+        ZStack {
+//            RoundedRectangle(cornerRadius: 25, style: .continuous)
+//                            .fill(Color.white)
+//                            .frame(width: 400, height: 200)
+            VStack() {
+                VStack() {
+                        KFImage(URL(string:news.urlToImage))
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .cornerRadius(20)
+                            .frame( width: 360, height: 180)
+                            .scaledToFill()
+    //                }
+                }
+                Spacer()
+                VStack() {
+                    HStack {
+                            Text(news.source)
+                                .font(.footnote)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.gray)
+                            Text(self.publishedDate)
+                                .font(.footnote)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.gray)
+                        }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(news.title)
+                            .font(.footnote)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }.frame(minWidth: 0,
+                    maxWidth: .infinity,
+                    minHeight: 0,
+                    maxHeight: .infinity,
+                    alignment: .topLeading
+            )
+        }.fixedSize(horizontal: false, vertical: true)
+        
+            
 //                        .clipped()
     //                    .aspectRatio(1, contentMode: .fit)
+                
+    //                Spacer()
                         
-                }
+//                }
 //                GeometryReader {
                 
 //                }
                    
-            }//.clipped()
-        }.padding()
+            //.clipped()
+            
+                
+//
+            
+//        }.padding()
             
             
 //        }
     }
 }
 
-struct NewsRow_Previews: PreviewProvider {
+struct SpecialNewsRow_Previews: PreviewProvider {
     static var previews: some View {
         let n:News =  News(
             url: "Google.com",
@@ -121,7 +135,7 @@ struct NewsRow_Previews: PreviewProvider {
             publishedAt: "today"
         )
         Group {
-            NewsRow(news: n)
+            SpecialNewsRow(news: n)
         }.previewLayout(.fixed(width: 300, height: 70))
     }
 }

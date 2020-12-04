@@ -16,9 +16,9 @@ struct StockList: View {
     
     var body: some View {
         NavigationView {
-            if (!stockFetchModel.dataReceived && !userData.purchasedStocksStrings.isEmpty && false) {
+            if (!userData.dataReceived && !userData.purchasedStocksStrings.isEmpty) {
                 ProgressView()
-                Text("Fetching Data")
+                Text("Fetching Data...")
                     .font(.footnote)
                     .foregroundColor(Color.gray)
             }
@@ -107,6 +107,8 @@ struct StockList: View {
                 }
             }
         }.onAppear {
+            
+            userData.dataReceived = false
             
             let defaults = UserDefaults.standard
             let favoritesArray = defaults.stringArray(forKey: "favorites")

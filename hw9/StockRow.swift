@@ -94,9 +94,7 @@ struct StockRow: View {
                                 $0.foregroundColor(Color.green)
                             }
                     }
-                    
-                    
-                        
+                             
                 }
                 .padding()
                 

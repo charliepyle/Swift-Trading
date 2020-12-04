@@ -220,44 +220,80 @@ struct StockDetail: View {
 
                     }
 
+                    
                     Group {
                         Text("News")
                             .font(.headline)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding([.top, .leading])
+                                    .padding([.top, .leading])
+                        List {
+                                        ForEach(stockFetchModel.stock!.news, id: \.url) { n in
+                                            let index = stockFetchModel.stock!.news.firstIndex(of: n)
+                                            if (index == 0) {
+                                                SpecialNewsRow(news: n)
+//                                                    .cornerRadius(20)
+                                                    .frame(width: 360, height: 300)
+                                                    .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                                                    .contextMenu {
+                                                    Button(action: {
+                                                        let escapedShareString = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 
-                        ForEach(stockFetchModel.stock!.news, id: \.url) { n in
-                            NewsRow(news: n)
-                                .contextMenu {
-                                    Button(action: {
-                                        let escapedShareString = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let url = URL(string: escapedShareString)
+                                                        UIApplication.shared.open(url!)
 
-                                        let url = URL(string: escapedShareString)
-                                        UIApplication.shared.open(url!)
+                                                    }) {
+                                                        Label("Open in Safari", systemImage: "safari")
+                                                    }
+                                                    Button(action: {
+                                                        let shareString = "Check out this link:"
+                                                        let twitterURL = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let hashtags = "CSCI571StockApp".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let stringToOpen = "https://twitter.com/intent/tweet?text=\(shareString)&url=\(twitterURL)&hashtags=\(hashtags)"
 
-                                    }) {
-                                        Label("Open in Safari", systemImage: "safari")
-                                    }
-                                    Button(action: {
-                                        let shareString = "Check out this link:"
-                                        let twitterURL = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-                                        let hashtags = "CSCI571StockApp".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-                                        let stringToOpen = "https://twitter.com/intent/tweet?text=\(shareString)&url=\(twitterURL)&hashtags=\(hashtags)"
+                                                        let escapedShareString = stringToOpen.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 
-                                        let escapedShareString = stringToOpen.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let url = URL(string: escapedShareString)
+                                                        UIApplication.shared.open(url!)
+                                                    }) {
+                                                        Label("Share on Twitter", systemImage: "square.and.arrow.up")
+                                                    }
+                                                    }.background(Color.white)
+                                            }
+                                            else {
+                                                NewsRow(news: n)
+                                                    .contextMenu {
+                                                    Button(action: {
+                                                        let escapedShareString = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 
-                                        let url = URL(string: escapedShareString)
-                                        UIApplication.shared.open(url!)
-                                    }) {
-                                        Label("Share on Twitter", systemImage: "square.and.arrow.up")
-                                    }
-                                }.background(Color.white)
-                        }
-                        
-                        
-                        
+                                                        let url = URL(string: escapedShareString)
+                                                        UIApplication.shared.open(url!)
+
+                                                    }) {
+                                                        Label("Open in Safari", systemImage: "safari")
+                                                    }
+                                                    Button(action: {
+                                                        let shareString = "Check out this link:"
+                                                        let twitterURL = n.url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let hashtags = "CSCI571StockApp".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                                                        let stringToOpen = "https://twitter.com/intent/tweet?text=\(shareString)&url=\(twitterURL)&hashtags=\(hashtags)"
+
+                                                        let escapedShareString = stringToOpen.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+
+                                                        let url = URL(string: escapedShareString)
+                                                        UIApplication.shared.open(url!)
+                                                    }) {
+                                                        Label("Share on Twitter", systemImage: "square.and.arrow.up")
+                                                    }
+                                                }.background(Color.white)
+                                            }
+                                            
+                                                
+        //                                }
+        //                            }
+                                    
+                                }
+                        }.frame(height: 1500)
                     }
-
                     .toolbar {
                         if userData.favorites.contains(stockFetchModel.stock!.ticker) {
                             Button(action: {
@@ -310,7 +346,7 @@ struct StockDetail: View {
                     .navigationBarTitle(Text(stockFetchModel.stock!.ticker))
 
 
-                    Spacer()
+//                    Spacer()
 
                 }
 //                .toast(isShowing: Constant.false, text: Text(transactionString), successToast: true)

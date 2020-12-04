@@ -36,6 +36,7 @@
 		4615E88225783AB8005556B0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4615E88125783AB8005556B0 /* LaunchScreen.storyboard */; };
 		4674495A2568FB1F007DF90A /* TradeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467449592568FB1F007DF90A /* TradeSheet.swift */; };
 		4680818E257855510043B241 /* PurchasedStock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680818D257855510043B241 /* PurchasedStock.swift */; };
+		46853F002579C29100B06CCA /* SpecialNewsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46853EFF2579C29100B06CCA /* SpecialNewsRow.swift */; };
 		468AFEE425787C3F0095EEED /* StockRowModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468AFEE325787C3F0095EEED /* StockRowModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +93,7 @@
 		4615E88125783AB8005556B0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		467449592568FB1F007DF90A /* TradeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSheet.swift; sourceTree = "<group>"; };
 		4680818D257855510043B241 /* PurchasedStock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasedStock.swift; sourceTree = "<group>"; };
+		46853EFF2579C29100B06CCA /* SpecialNewsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialNewsRow.swift; sourceTree = "<group>"; };
 		468AFEE325787C3F0095EEED /* StockRowModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockRowModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -150,6 +152,7 @@
 				4615E86B257833F1005556B0 /* ChartViewController.swift */,
 				4615E8402576EB49005556B0 /* SearchRow.swift */,
 				4615E8252576B207005556B0 /* NewsRow.swift */,
+				46853EFF2579C29100B06CCA /* SpecialNewsRow.swift */,
 				467449592568FB1F007DF90A /* TradeSheet.swift */,
 				460BDCF625649BCB00A39ACD /* StockList.swift */,
 				460BDD61256502CA00A39ACD /* SearchBar.swift */,
@@ -367,6 +370,7 @@
 				468AFEE425787C3F0095EEED /* StockRowModel.swift in Sources */,
 				4615E85825780534005556B0 /* DayPrice.swift in Sources */,
 				460BDCF525649BCB00A39ACD /* hw9App.swift in Sources */,
+				46853F002579C29100B06CCA /* SpecialNewsRow.swift in Sources */,
 				460BDD702567522B00A39ACD /* ViewControllerResolver.swift in Sources */,
 				4615E82B2576B3E4005556B0 /* News.swift in Sources */,
 				4680818E257855510043B241 /* PurchasedStock.swift in Sources */,
